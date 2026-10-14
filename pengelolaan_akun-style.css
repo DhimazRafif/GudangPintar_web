@@ -1,0 +1,81 @@
+/* Mengatur background luar (area gelap di sekitar mobile) */
+body {
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Kontainer utama untuk membatasi lebar seperti layar HP */
+.mobile-container {
+    width: 100%;
+    max-width: 400px; /* Lebar maksimal menyerupai HP */
+    height: 800px; /* Tinggi tetap untuk tampilan desktop */
+    max-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px; /* Sudut melengkung untuk tampilan desktop */
+}
+
+/* Warna hijau custom sesuai gambar */
+.header-green {
+    background-color: #9bf976; /* Warna hijau muda terang */
+}
+
+.btn-custom-green {
+    background-color: #9bf976;
+    color: #000;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-custom-green:hover {
+    background-color: #85e062; /* Sedikit lebih gelap saat di-hover */
+    color: #000;
+}
+
+/* Styling untuk Bottom Navigation */
+.nav-item-custom {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.nav-item-custom:active {
+    transform: scale(0.95); /* Efek menekan */
+}
+
+/* Pill hijau untuk menu yang aktif di bottom nav */
+.active-pill {
+    background-color: #9bf976;
+    border-radius: 20px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+/* Styling Card agar lebih rapi */
+.card {
+    border-radius: 12px !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+/* Menyesuaikan ukuran font pada tombol Edit/Hapus */
+.btn-sm {
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+/* Menghilangkan outline default saat tombol diklik */
+button:focus {
+    box-shadow: none !important;
+}
+
+/* Responsif untuk layar HP asli */
+@media (max-width: 400px) {
+    .mobile-container {
+        height: 100vh;
+        border-radius: 0;
+    }
+}
