@@ -32,5 +32,5 @@ sesuai dengan transaksi barang yang terjadi di toko.
 
 <h2>ScreenShot</h2>
 <p>Dashboard : </p>
-<img width="611" height="858" alt="Cuplikan layar 2026-10-14 201804" src="https://github.com/user-attachments/assets/fcb02d2d-f3c8-4eeb-ba3a-110a7a928383" />
+<img width="500" height="858" alt="Cuplikan layar 2026-10-14 201804" src="https://github.com/user-attachments/assets/fcb02d2d-f3c8-4eeb-ba3a-110a7a928383" />
 <img width="1917" height="918" alt="Cuplikan layar 2026-10-14 201748" src="https://github.com/user-attachments/assets/ebb8c098-f446-4101-800f-66537cab25cb" />
