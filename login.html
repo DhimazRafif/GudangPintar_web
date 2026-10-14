@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masuk - Gudang Pintar</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="login-style.css" />
+  </head>
+  <body>
+    <header class="login-header d-flex align-items-center">
+      <a class="brand text-decoration-none" href="dashboard.html">Gudang Pintar</a>
+      <form class="header-search" role="search">
+        <input class="form-control" type="search" placeholder="Cari..." aria-label="Cari" />
+      </form>
+    </header>
+
+    <main class="login-page d-flex align-items-center justify-content-center">
+      <section class="login-popup" aria-labelledby="login-title">
+        <a class="close-button" href="dashboard.html" aria-label="Tutup">×</a>
+        <div class="popup-brand">Gudang Pintar</div>
+        <h1 id="login-title">Masuk</h1>
+        <p class="login-intro">Masuk ke akun toko kamu</p>
+
+        <form action="#" method="get">
+          <div class="mb-3">
+            <label for="email" class="form-label">Gmail</label>
+            <input class="form-control" type="email" id="email" name="email" placeholder="nama@gmail.com" autocomplete="email" required />
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input class="form-control" type="text" id="username" name="username" placeholder="Masukkan username" autocomplete="username" required />
+          </div>
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input class="form-control" type="password" id="password" name="password" placeholder="Masukkan password" autocomplete="current-password" required />
+          </div>
+          <button class="btn btn-login w-100" type="submit">Masuk</button>
+        </form>
+
+        <p class="signup-note mb-0">Belum punya akun? Hubungi admin toko.</p>
+      </section>
+    </main>
+  </body>
+</html>
