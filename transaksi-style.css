@@ -35,13 +35,8 @@
 .sidebar-db {
   position: sticky;
   top: 75px;
-  background-color: white;
-  align-self: self-start;
-  display: flex;
+  align-self: flex-start;
   height: calc(100vh - 75px);
-  align-items: center;
-  padding: 15px 20px;
-  border-right: 1px solid grey;
 }
 
 .nav-item {
@@ -61,6 +56,7 @@ main {
   border-radius: 8px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   vertical-align: middle;
 }

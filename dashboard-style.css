@@ -30,28 +30,15 @@
     max-width: 400px;
   }
 }
-.search-bar {
-  align-items: center;
-}
 
 .sidebar-db {
   position: sticky;
   top: 75px;
-  background-color: white;
-  align-self: self-start;
-  display: flex;
+  align-self: flex-start;
   height: calc(100vh - 75px);
-  align-items: center;
-  padding: 15px 20px;
-  border-right: 1px solid grey;
-}
-
-.item {
-  justify-content: space-between;
 }
 
 .card {
-  height: 100%;
   width: 155px;
   margin-top: 5px;
   margin-left: 4px;
@@ -60,8 +47,12 @@
 .nav-item {
   border: 1px groove black;
   border-radius: 5px;
+}
 
-  :hover {
-    background-color: grey;
-  }
+.nav-item:hover {
+  background-color: grey;
+}
+
+main {
+  background-color: #f8f9fa;
 }

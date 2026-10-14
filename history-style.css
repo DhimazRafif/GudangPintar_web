@@ -39,13 +39,8 @@
 .sidebar-db {
   position: sticky;
   top: 75px;
-  background-color: white;
-  align-self: self-start;
-  display: flex;
+  align-self: flex-start;
   height: calc(100vh - 75px);
-  align-items: center;
-  padding: 15px 20px;
-  border-right: 1px solid grey;
 }
 
 .item {
@@ -100,7 +95,10 @@
 
 .history-detail {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(100px, auto) 45px minmax(80px, auto);
+  grid-template-columns: minmax(0, 1fr) minmax(100px, auto) 45px minmax(
+      80px,
+      auto
+    );
   align-items: center;
   gap: 20px;
   min-height: 80px;
