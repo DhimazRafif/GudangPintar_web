@@ -1,0 +1,66 @@
+.header-db {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid grey;
+  z-index: 999;
+}
+
+.logo,
+.header-right {
+  flex: 1;
+}
+
+.logo {
+  color: green;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.search-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.sidebar-db {
+  position: sticky;
+  top: 75px;
+  background-color: white;
+  align-self: self-start;
+  display: flex;
+  height: calc(100vh - 75px);
+  align-items: center;
+  padding: 15px 20px;
+  border-right: 1px solid grey;
+}
+
+.nav-item {
+  border: 1px groove black;
+  border-radius: 5px;
+}
+
+.nav-item:hover {
+  background-color: grey;
+}
+
+main {
+  background-color: #f8f9fa;
+}
+
+.card {
+  border-radius: 8px;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
