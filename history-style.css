@@ -1,0 +1,146 @@
+.header-db {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid grey;
+  z-index: 999;
+}
+
+.logo,
+.header-right {
+  flex: 1;
+}
+
+.logo {
+  color: green;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.search-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-bar {
+  align-items: center;
+}
+
+.sidebar-db {
+  position: sticky;
+  top: 75px;
+  background-color: white;
+  align-self: self-start;
+  display: flex;
+  height: calc(100vh - 75px);
+  align-items: center;
+  padding: 15px 20px;
+  border-right: 1px solid grey;
+}
+
+.item {
+  justify-content: space-between;
+}
+
+.card {
+  height: 100%;
+  width: 155px;
+  margin-top: 5px;
+  margin-left: 4px;
+}
+
+.nav-item {
+  border: 1px groove black;
+  border-radius: 5px;
+}
+
+.nav-item:hover {
+  background-color: grey;
+}
+
+.history-main {
+  min-width: 0;
+}
+
+.history-list {
+  padding: 0 5px 10px 0;
+}
+
+.history-card {
+  width: auto;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.history-card .card-body {
+  padding: 15px 22px;
+}
+
+.history-head {
+  border-bottom: 1px solid #888;
+  padding-bottom: 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.history-date {
+  color: #777;
+  font-weight: normal;
+}
+
+.history-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, auto) 45px minmax(80px, auto);
+  align-items: center;
+  gap: 20px;
+  min-height: 80px;
+}
+
+.item-name,
+.old-value,
+.new-value {
+  font-size: 18px;
+}
+
+.old-value,
+.new-value {
+  text-align: center;
+}
+
+.arrow {
+  font-size: 34px;
+  line-height: 1;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .history-card .card-body {
+    padding: 12px;
+  }
+
+  .history-detail {
+    grid-template-columns: minmax(0, 1fr) 35px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .item-name {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+  }
+
+  .old-value,
+  .new-value {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+}
