@@ -32,25 +32,42 @@
 
     <div class="d-flex min-vh-100">
       <aside
-        class="sidebar-db bg-white p-3 border-end d-flex flex-column"
+        class="sidebar-db bg-white p-3 border-end d-flex flex-columnn"
         style="width: 250px"
       >
         <nav class="flex-grow-1">
           <ul class="nav flex-column gap-2">
             <li class="nav-item">
-              <a href="dashboard.html" class="nav-link text-black sidebar-link rounded">Dashboard</a>
+              <a
+                href="dashboard.html"
+                class="nav-link text-black sidebar-link rounded"
+                >Dashboard</a
+              >
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link text-black sidebar-link rounded">Barang</a>
+              <a href="#" class="nav-link text-black sidebar-link rounded"
+                >Barang</a
+              >
             </li>
             <li class="nav-item">
-              <a href="transaksi.html" class="nav-link text-black sidebar-link active-link rounded" aria-current="page">Transaksi</a>
+              <a
+                href="transaksi.html"
+                class="nav-link text-black sidebar-link active-link rounded"
+                aria-current="page"
+                >Transaksi</a
+              >
             </li>
             <li class="nav-item">
-              <a href="history.html" class="nav-link text-black sidebar-link rounded">Riwayat</a>
+              <a
+                href="history.html"
+                class="nav-link text-black sidebar-link rounded"
+                >Riwayat</a
+              >
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link text-black sidebar-link rounded">Akun</a>
+              <a href="#" class="nav-link text-black sidebar-link rounded"
+                >Akun</a
+              >
             </li>
           </ul>
         </nav>
@@ -59,7 +76,7 @@
       <main class="flex-grow-1 p-4">
         <div class="container-fluid p-0">
           <h2 class="mb-4 fw-bold">Menu Transaksi</h2>
-          
+
           <div class="d-flex gap-3 mb-4">
             <button class="btn btn-success btn-lg px-4 shadow-sm">
               Transaksi Stok Masuk
@@ -71,52 +88,104 @@
 
           <div class="card shadow-sm border-0 p-4">
             <h4 class="card-title mb-3">Form Input Transaksi</h4>
-            
+
             <div class="mb-3">
-              <label for="supplier" class="form-label fw-semibold">Nama Supplier (Opsional / Stok Masuk)</label>
-              <input type="text" class="form-control" id="supplier" placeholder="Masukkan nama supplier...">
+              <label for="supplier" class="form-label fw-semibold"
+                >Nama Supplier (Opsional / Stok Masuk)</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="supplier"
+                placeholder="Masukkan nama supplier..."
+              />
             </div>
 
-            <label class="form-label fw-semibold mb-2">Pilih Barang & Ubah Kuantitas:</label>
+            <label class="form-label fw-semibold mb-2"
+              >Pilih Barang & Ubah Kuantitas:</label
+            >
             <div class="table-responsive border rounded p-2 bg-light mb-3">
               <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                   <tr>
-                    <th scope="col" style="width: 50px;" class="text-center">Check</th>
+                    <th scope="col" style="width: 50px" class="text-center">
+                      Check
+                    </th>
                     <th scope="col">Nama Barang</th>
                     <th scope="col">Stok Saat Ini</th>
-                    <th scope="col" style="width: 180px;">Jumlah Ditambah / Dikurang</th>
+                    <th scope="col" style="width: 180px">
+                      Jumlah Ditambah / Dikurang
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="text-center">
-                      <input class="form-check-input" type="checkbox" id="item1">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="item1"
+                      />
                     </td>
-                    <td><label for="item1" class="user-select-none">Air Mineral</label></td>
+                    <td>
+                      <label for="item1" class="user-select-none"
+                        >Air Mineral</label
+                      >
+                    </td>
                     <td>31</td>
                     <td>
-                      <input type="number" class="form-control form-control-sm" min="0" value="0">
+                      <input
+                        type="number"
+                        class="form-control form-control-sm"
+                        min="0"
+                        value="0"
+                      />
                     </td>
                   </tr>
                   <tr>
                     <td class="text-center">
-                      <input class="form-check-input" type="checkbox" id="item2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="item2"
+                      />
                     </td>
-                    <td><label for="item2" class="user-select-none">Buku Tulis</label></td>
+                    <td>
+                      <label for="item2" class="user-select-none"
+                        >Buku Tulis</label
+                      >
+                    </td>
                     <td>15</td>
                     <td>
-                      <input type="number" class="form-control form-control-sm" min="0" value="0">
+                      <input
+                        type="number"
+                        class="form-control form-control-sm"
+                        min="0"
+                        value="0"
+                      />
                     </td>
                   </tr>
                   <tr>
                     <td class="text-center">
-                      <input class="form-check-input" type="checkbox" id="item3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="item3"
+                      />
                     </td>
-                    <td><label for="item3" class="user-select-none">Pulpen Hitam</label></td>
+                    <td>
+                      <label for="item3" class="user-select-none"
+                        >Pulpen Hitam</label
+                      >
+                    </td>
                     <td>40</td>
                     <td>
-                      <input type="number" class="form-control form-control-sm" min="0" value="0">
+                      <input
+                        type="number"
+                        class="form-control form-control-sm"
+                        min="0"
+                        value="0"
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -124,10 +193,11 @@
             </div>
 
             <div>
-              <a href="history.html" class="btn btn-primary px-4">Simpan Transaksi</a>
+              <a href="history.html" class="btn btn-primary px-4"
+                >Simpan Transaksi</a
+              >
             </div>
           </div>
-
         </div>
       </main>
     </div>
