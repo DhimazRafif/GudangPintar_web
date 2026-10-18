@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GudangPintar</title>
+    <title>Gudang Pintar</title>
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -21,12 +21,13 @@
       <div class="logo">Gudang Pintar</div>
 
       <div class="search-container">
-        <form action="">
+        <form id="search-form">
           <input
-            type="text"
-            placeholder="Cari..."
+            type="search"
+            placeholder="Cari barang..."
             id="search-bar"
             class="form-control"
+            aria-label="Cari barang"
           />
         </form>
       </div>
@@ -34,10 +35,9 @@
       <div class="header-right"></div>
     </header>
 
-    <div class="d-flex min-vh-100">
+    <div class="dashboard-layout d-flex">
       <aside
         class="sidebar-db bg-white p-3 border-end d-flex flex-column"
-        style="width: 250px"
       >
         <nav class="flex-grow-1">
           <ul class="nav flex-column gap-2">
@@ -79,211 +79,272 @@
         </nav>
       </aside>
 
-      <main class="flex-grow-1">
-        <div class="item container-fluid p-0">
-          <div class="d-flex flex-wrap">
+      <main class="main-content flex-grow-1">
+        <div class="container-fluid p-3">
+          <h1 class="dashboard-title">Daftar Barang</h1>
+          <p class="dashboard-description">
+            Pantau jumlah dan status stok barang di gudang.
+          </p>
+
+          <div id="item-list" class="item-list">
 
             <!-- Barang 1: Mie -->
-            <div class="card">
+            <article class="card item-card" data-name="Mie">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2Bh68kkObJoTTwAOqdlOdEgUHnzh4jK4kHODsu5_kuQ&s=10"
                 class="card-img-top"
-                alt="Foto Mie"
+                alt="Mie"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Mie</h5>
-                <p class="card-text mb-2">Harga : 3000</p>
-                <p class="card-text">
-                  Jumlah: <strong>12 unit</strong><br />
-                  <span class="stock-status" data-stock="12">Memuat...</span>
+                <h2 class="card-title">Mie</h2>
+                <p class="card-text mb-2">Harga: Rp3.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">12</strong> unit
                 </p>
+                <span class="stock-status" data-stock="12">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 2: Kecap -->
-            <div class="card">
+            <article class="card item-card" data-name="Kecap">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQydWxC4F4delN5ovj4FxK6wkhbRyATMY7c8HU-IwQww&s=10"
                 class="card-img-top"
-                alt="Foto Kecap"
+                alt="Kecap"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Kecap</h5>
-                <p class="card-text mb-2">Harga : 8000</p>
-                <p class="card-text">
-                  Jumlah: <strong>24 unit</strong><br />
-                  <span class="stock-status" data-stock="24">Memuat...</span>
+                <h2 class="card-title">Kecap</h2>
+                <p class="card-text mb-2">Harga: Rp8.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">24</strong> unit
                 </p>
+                <span class="stock-status" data-stock="24">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 3: Minyak Goreng -->
-            <div class="card">
+            <article class="card item-card" data-name="Minyak Goreng">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1tnZLRquRcIDwBeNpswFB3ZF-09tbRz2V72tPjVVZkA&s=10"
                 class="card-img-top"
-                alt="Foto Minyak Goreng"
+                alt="Minyak Goreng"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Minyak Goreng</h5>
-                <p class="card-text mb-2">Harga : 18000</p>
-                <p class="card-text">
-                  Jumlah: <strong>24 unit</strong><br />
-                  <span class="stock-status" data-stock="24">Memuat...</span>
+                <h2 class="card-title">Minyak Goreng</h2>
+                <p class="card-text mb-2">Harga: Rp18.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">24</strong> unit
                 </p>
+                <span class="stock-status" data-stock="24">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 4: Sabun -->
-            <div class="card">
+            <article class="card item-card" data-name="Sabun">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXiHra6SHVi0yzW1WFf8DJEq16y5mATvgVYuYJ4cg-Hg&s"
                 class="card-img-top"
-                alt="Foto Sabun"
+                alt="Sabun"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Sabun</h5>
-                <p class="card-text mb-2">Harga : 4000</p>
-                <p class="card-text">
-                  Jumlah: <strong>20 unit</strong><br />
-                  <span class="stock-status" data-stock="20">Memuat...</span>
+                <h2 class="card-title">Sabun</h2>
+                <p class="card-text mb-2">Harga: Rp4.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">20</strong> unit
                 </p>
+                <span class="stock-status" data-stock="20">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 5: Air Mineral -->
-            <div class="card">
+            <article class="card item-card" data-name="Air Mineral">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-In_MWuD6Ko2ANWzCT8cuSmqShI88D-AXxlN95b2UCA&s=10"
                 class="card-img-top"
-                alt="Foto Air Mineral"
+                alt="Air Mineral"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Air Mineral</h5>
-                <p class="card-text mb-2">Harga : 3000</p>
-                <p class="card-text">
-                  Jumlah: <strong>24 unit</strong><br />
-                  <span class="stock-status" data-stock="24">Memuat...</span>
+                <h2 class="card-title">Air Mineral</h2>
+                <p class="card-text mb-2">Harga: Rp3.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">24</strong> unit
                 </p>
+                <span class="stock-status" data-stock="24">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 6: Shampo -->
-            <div class="card">
+            <article class="card item-card" data-name="Shampo">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS7OLUub-CkO1qwFhWd0XxXEjW3SUkL-c-BGcb1czuQg&s=10"
                 class="card-img-top"
-                alt="Foto Shampo"
+                alt="Shampo"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Shampo</h5>
-                <p class="card-text mb-2">Harga : 15000</p>
-                <p class="card-text">
-                  Jumlah: <strong>16 unit</strong><br />
-                  <span class="stock-status" data-stock="16">Memuat...</span>
+                <h2 class="card-title">Shampo</h2>
+                <p class="card-text mb-2">Harga: Rp15.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">16</strong> unit
                 </p>
+                <span class="stock-status" data-stock="16">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 7: Chiki -->
-            <div class="card">
+            <article class="card item-card" data-name="Chiki">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzG8SPw33S76c6D7KLuO1k-CIin9Mq_JmLVtlTzyljjw&s=10"
                 class="card-img-top"
-                alt="Foto Chiki"
+                alt="Chiki"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Chiki</h5>
-                <p class="card-text mb-2">Harga : 1000</p>
-                <p class="card-text">
-                  Jumlah: <strong>30 unit</strong><br />
-                  <span class="stock-status" data-stock="30">Memuat...</span>
+                <h2 class="card-title">Chiki</h2>
+                <p class="card-text mb-2">Harga: Rp1.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">30</strong> unit
                 </p>
+                <span class="stock-status" data-stock="30">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 8: Teh -->
-            <div class="card">
+            <article class="card item-card" data-name="Teh">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq_4gSr52Umwr3YH9ZjkkKG5OeaLxJysF0TIn_rZxAbQ&s=10"
                 class="card-img-top"
-                alt="Foto Teh"
+                alt="Teh"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Teh</h5>
-                <p class="card-text mb-2">Harga : 12000</p>
-                <p class="card-text">
-                  Jumlah: <strong>24 unit</strong><br />
-                  <span class="stock-status" data-stock="24">Memuat...</span>
+                <h2 class="card-title">Teh</h2>
+                <p class="card-text mb-2">Harga: Rp12.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">24</strong> unit
                 </p>
+                <span class="stock-status" data-stock="24">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 9: Kopi -->
-            <div class="card">
+            <article class="card item-card" data-name="Kopi">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqA9GAtAwJw3AkOD56jv1XAsgRLRuKL3Jc5NSKdAwIqw&s=10"
                 class="card-img-top"
-                alt="Foto Kopi"
+                alt="Kopi"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Kopi</h5>
-                <p class="card-text mb-2">Harga : 5000</p>
-                <p class="card-text">
-                  Jumlah: <strong>24 unit</strong><br />
-                  <span class="stock-status" data-stock="24">Memuat...</span>
+                <h2 class="card-title">Kopi</h2>
+                <p class="card-text mb-2">Harga: Rp5.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">24</strong> unit
                 </p>
+                <span class="stock-status" data-stock="24">Memuat...</span>
               </div>
-            </div>
+            </article>
 
             <!-- Barang 10: Sikat Gigi -->
-            <div class="card">
+            <article class="card item-card" data-name="Sikat Gigi">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO2c1yABhHUztDUeZWTGGZ5SX1nWn1cSvKlrD-gb43Jg&s=10"
                 class="card-img-top"
-                alt="Foto Sikat Gigi"
+                alt="Sikat Gigi"
+                loading="lazy"
               />
               <div class="card-body">
-                <h5 class="card-title">Sikat Gigi</h5>
-                <p class="card-text mb-2">Harga : 7000</p>
-                <p class="card-text">
-                  Jumlah: <strong>20 unit</strong><br />
-                  <span class="stock-status" data-stock="20">Memuat...</span>
+                <h2 class="card-title">Sikat Gigi</h2>
+                <p class="card-text mb-2">Harga: Rp7.000</p>
+                <p class="card-text mb-2">
+                  Jumlah: <strong class="stock-quantity">20</strong> unit
                 </p>
+                <span class="stock-status" data-stock="20">Memuat...</span>
               </div>
-            </div>
+            </article>
 
           </div>
+          <p id="empty-message" class="text-secondary mt-3" hidden>
+            Barang tidak ditemukan.
+          </p>
         </div>
       </main>
     </div>
 
-    <!-- Logika indikator stok -->
+    <footer class="footer-db">
+      <p class="mb-0">&copy; 2026 Gudang Pintar</p>
+    </footer>
+
     <script>
+      // Menentukan warna dan status berdasarkan jumlah stok.
       document.querySelectorAll(".stock-status").forEach((status) => {
-        const stok = Number(status.dataset.stock);
+        const stock = Number(status.dataset.stock);
+        const card = status.closest(".item-card");
+        const quantity = card.querySelector(".stock-quantity");
 
         status.classList.remove(
           "stock-aman",
           "stock-menipis",
-          "stock-habis"
+          "stock-habis",
+          "stock-invalid"
         );
 
-        if (!Number.isFinite(stok)) {
+        if (
+          status.dataset.stock.trim() === "" ||
+          !Number.isFinite(stock) ||
+          stock < 0
+        ) {
+          status.classList.add("stock-invalid");
           status.textContent = "Stok tidak valid";
+          quantity.textContent = "-";
           return;
         }
 
-        if (stok <= 0) {
+        quantity.textContent = stock;
+
+        if (stock === 0) {
           status.classList.add("stock-habis");
           status.textContent = "Habis";
-        } else if (stok <= 10) {
+        } else if (stock <= 10) {
           status.classList.add("stock-menipis");
           status.textContent = "Hampir habis";
         } else {
           status.classList.add("stock-aman");
           status.textContent = "Aman";
         }
+      });
+
+      // Pencarian barang berdasarkan nama.
+      const searchBar = document.getElementById("search-bar");
+      const itemCards = document.querySelectorAll(".item-card");
+      const emptyMessage = document.getElementById("empty-message");
+
+      searchBar.addEventListener("input", () => {
+        const keyword = searchBar.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        itemCards.forEach((card) => {
+          const name = card.dataset.name.toLowerCase();
+          const matches = name.includes(keyword);
+
+          card.hidden = !matches;
+
+          if (matches) {
+            visibleCount++;
+          }
+        });
+
+        emptyMessage.hidden = visibleCount !== 0;
+      });
+
+      // Mencegah form pencarian memuat ulang halaman saat Enter ditekan.
+      document.getElementById("search-form").addEventListener("submit", (event) => {
+        event.preventDefault();
       });
     </script>
   </body>
