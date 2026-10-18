@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barang - Gudang Pintar</title>
+    <link rel="stylesheet" href="barang-style.css">
+</head>
+<body>
+    <header class="topbar">
+        <b class="brand">Gudang Pintar</b>
+        <input id="cariBarang" type="search" placeholder="Cari barang...">
+        <button type="button" id="tombolTambah" class="btn utama">
+            + Tambah Barang
+        </button>
+    </header>
+
+    <div class="container">
+        <aside>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="barang.html" class="aktif">Barang</a>
+            <a href="riwayat.html">Riwayat</a>
+            <a href="akun.html">Akun</a>
+        </aside>
+
+        <main>
+            <h1>Barang</h1>
+            <p>Kelola barang, harga, dan stok gudang.</p>
+            <p id="pesanBarang" role="status"></p>
+
+            <div class="tabel-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Kedaluwarsa</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daftarBarang"></tbody>
+                </table>
+                <p id="kosong" hidden>Belum ada barang. Klik Tambah Barang.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Popup tambah dan edit barang -->
+    <dialog id="modalBarang">
+        <form id="formBarang">
+            <h2 id="judulModal">Tambah Barang</h2>
+
+            <input type="hidden" id="barangId">
+
+            <label for="namaBarang">Nama barang</label>
+            <input id="namaBarang" type="text" required maxlength="100">
+
+            <label for="hargaBarang">Harga (Rp)</label>
+            <input id="hargaBarang" type="number" min="0" step="1" required>
+
+            <label for="stokBarang">Jumlah stok</label>
+            <input id="stokBarang" type="number" min="0" step="1" required>
+
+            <label for="tanggalBarang">Tanggal kedaluwarsa</label>
+            <input id="tanggalBarang" type="date">
+
+            <div class="tombol-form">
+                <button type="button" id="batalModal" class="btn">Batal</button>
+                <button type="submit" class="btn utama">Simpan Barang</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Letakkan script di sini, sebelum penutup body -->
+    <script src="barang.js"></script>
+</body>
+</html>
