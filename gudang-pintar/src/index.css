@@ -1,0 +1,114 @@
+/* =========================
+   HEADER
+========================= */
+
+/* =========================
+   SIDEBAR
+========================= */
+
+/* =========================
+   KONTEN DASHBOARD
+========================= */
+
+.main-content {
+  min-width: 0;
+  background-color: #f8f9fa;
+}
+
+.dashboard-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #212529;
+}
+
+.dashboard-description {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.item-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* =========================
+   KARTU BARANG
+========================= */
+
+/* =========================
+   PESAN HASIL PENCARIAN
+========================= */
+
+#empty-message {
+  padding: 10px 0;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-db {
+  padding: 15px 20px;
+  text-align: center;
+  color: #6c757d;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+}
+
+/* =========================
+   RESPONSIVE: TABLET
+========================= */
+
+@media (max-width: 768px) {
+  .item-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .card-img-top {
+    height: 125px;
+  }
+}
+
+/* =========================
+   RESPONSIVE: HP
+========================= */
+
+@media (max-width: 480px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .item-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .card-img-top {
+    height: 110px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.85rem;
+  }
+
+  .stock-status {
+    font-size: 0.72rem;
+    padding: 5px 7px;
+  }
+}
