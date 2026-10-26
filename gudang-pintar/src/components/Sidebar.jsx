@@ -7,48 +7,48 @@ export default function Sidebar() {
       <nav className="flex-grow-1">
         <ul className="nav flex-column gap-2">
           <li className="nav-item">
-            <a
+            <Link
               href="/Dashboard"
               className="nav-link text-black rounded sidebar-link active-link"
             >
               Dashboard
-            </a>
+            </Link>
           </li>
 
           <li className="nav-item">
-            <a
+            <Link
               href="/barang"
               className="nav-link text-black rounded sidebar-link"
             >
               Barang
-            </a>
+            </Link>
           </li>
 
           <li className="nav-item">
-            <a
+            <Link
               href="/transaksi"
               className="nav-link text-black rounded sidebar-link"
             >
               Transaksi
-            </a>
+            </Link>
           </li>
 
           <li className="nav-item">
-            <a
+            <Link
               href="/history"
               className="nav-link text-black rounded sidebar-link"
             >
               Riwayat
-            </a>
+            </Link>
           </li>
 
           <li className="nav-item">
-            <a
+            <Link
               href="/akun"
               className="nav-link text-black rounded sidebar-link"
             >
               Akun
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
