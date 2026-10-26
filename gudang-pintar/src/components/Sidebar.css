@@ -1,0 +1,72 @@
+.dashboard-layout {
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-db {
+  position: sticky;
+  top: 75px;
+  align-self: flex-start;
+  flex-shrink: 0;
+  width: 250px;
+  height: calc(100vh - 75px);
+  overflow-y: auto;
+}
+
+.nav-item {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.sidebar-link {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-item:hover .sidebar-link {
+  background-color: #e9ecef;
+}
+
+.active-link {
+  background-color: #e8f5ed;
+  color: #198754 !important;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .sidebar-db {
+    width: 150px;
+    padding: 10px !important;
+  }
+
+  .sidebar-link {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-db {
+    position: static;
+    width: 100%;
+    height: auto;
+    border-right: 0 !important;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .sidebar-db:global(.nav) {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
+
+  .sidebar-db .nav-item {
+    flex: 1 1 auto;
+  }
+
+  .sidebar-link {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+}
