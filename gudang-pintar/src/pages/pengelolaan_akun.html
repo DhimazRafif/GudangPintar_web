@@ -1,144 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengelolaan Akun</title>
-    
-    <!-- Bootstrap 5 CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gudang Pintar - Pengelolaan Akun</title>
 
-    <!-- Kontainer utama untuk simulasi tampilan Mobile -->
-    <div class="mobile-container d-flex flex-column bg-white shadow-lg">
-        
-        <!-- Top App Bar (Sesuai gambar bagian atas) -->
-        <div class="d-flex align-items-center justify-content-between p-3 bg-white border-bottom">
-            <button class="btn btn-light rounded-circle shadow-sm" onclick="goBack()">
-                <i class="bi bi-arrow-left"></i>
-            </button>
-            <div class="text-center">
-                <h6 class="fw-bold mb-0">UI Gudang Pintar</h6>
-                <small class="text-muted">Page 1 <i class="bi bi-chevron-down"></i></small>
-            </div>
+    <!-- Bootstrap 5 CSS CDN (Sama persis dengan Dashboard, Riwayat, dan Login) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Style seragam dengan halaman lain -->
+    <link rel="stylesheet" href="pengelolaan_akun-style.css" />
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Header seragam dengan Dashboard, Transaksi, dan Riwayat -->
+    <header class="header-db">
+      <div class="logo">Gudang Pintar</div>
+
+      <div class="search-container">
+        <form id="search-form" onsubmit="event.preventDefault();">
+          <input
+            type="search"
+            placeholder="Cari akun..."
+            id="search-bar"
+            class="form-control"
+            aria-label="Cari akun"
+          />
+        </form>
+      </div>
+
+      <div class="header-right"></div>
+    </header>
+
+    <!-- Layout Utama: Sidebar di kiri, Konten di kanan -->
+    <div class="dashboard-layout d-flex">
+      <aside class="sidebar-db bg-white p-3 border-end d-flex flex-column">
+        <nav class="flex-grow-1">
+          <ul class="nav flex-column gap-2">
+            <li class="nav-item">
+              <a
+                href="dashboard.html"
+                class="nav-link text-black sidebar-link rounded"
+              >Dashboard</a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                href="dashboard.html"
+                class="nav-link text-black sidebar-link rounded"
+              >Barang</a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                href="transaksi.html"
+                class="nav-link text-black sidebar-link rounded"
+              >Transaksi</a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                href="history.html"
+                class="nav-link text-black sidebar-link rounded"
+              >Riwayat</a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                href="pengelolaan_akun.html"
+                class="nav-link text-black sidebar-link active-link rounded"
+                aria-current="page"
+              >Akun</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Area Konten Utama -->
+      <main class="main-content flex-grow-1">
+        <div class="container-fluid p-3 p-md-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <button class="btn btn-light rounded-circle shadow-sm me-1" onclick="openChat()">
-                    <i class="bi bi-chat-dots"></i>
-                </button>
-                <button class="btn btn-light rounded-circle shadow-sm" onclick="openMenu()">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
+              <h1 class="dashboard-title mb-1">Pengelolaan Akun</h1>
+              <p class="dashboard-description mb-0">
+                Kelola daftar akun pengguna dan peran (role) di sistem Gudang Pintar.
+              </p>
             </div>
-        </div>
-
-        <!-- Header Hijau -->
-        <div class="header-green text-center py-4">
-            <h3 class="fw-bold mb-0 text-dark">Pengelolaan Akun</h3>
-        </div>
-
-        <!-- Konten Utama (Daftar Akun) -->
-        <div class="flex-grow-1 p-3 overflow-auto position-relative">
-            
-            <!-- Card Akun 1 (Admin) -->
-            <div class="card mb-3 shadow-sm border rounded-3">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-                    <div class="d-flex flex-column">
-                        <h5 class="fw-bold mb-0 text-dark">Siti<br>Khadijah</h5>
-                        <span class="text-dark mt-1">(Admin)</span>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <button class="btn btn-sm btn-custom-green fw-bold px-4" onclick="editAkun('Siti Khadijah')">Edit</button>
-                        <button class="btn btn-sm btn-danger fw-bold px-3" onclick="hapusAkun('Siti Khadijah')">Hapus</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Akun 2 (User) -->
-            <div class="card mb-3 shadow-sm border rounded-3">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-                    <div class="d-flex flex-column">
-                        <h5 class="fw-bold mb-0 text-dark">Dhimaz</h5>
-                        <span class="text-dark mt-1">(User)</span>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <button class="btn btn-sm btn-custom-green fw-bold px-4" onclick="editAkun('Dhimaz')">Edit</button>
-                        <button class="btn btn-sm btn-danger fw-bold px-3" onclick="hapusAkun('Dhimaz')">Hapus</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Floating Action Button (FAB) Tambah -->
-            <button class="btn btn-custom-green rounded-circle position-absolute bottom-0 end-0 m-4 shadow d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;" onclick="tambahAkun()">
-                <i class="bi bi-plus-lg fs-3 fw-bold text-dark"></i>
+            <button
+              class="btn btn-success fw-semibold shadow-sm px-3 py-2"
+              onclick="tambahAkun()"
+            >
+              + Tambah Akun
             </button>
-        </div>
+          </div>
 
-        <!-- Bottom Navigation -->
-        <div class="d-flex justify-content-around align-items-center py-2 border-top bg-white">
-            <div class="nav-item-custom d-flex flex-column align-items-center text-muted" onclick="navigate('Dashboard')">
-                <i class="bi bi-star fs-5 mb-1"></i>
-                <small style="font-size: 0.7rem;">Dashboard</small>
-            </div>
-            <div class="nav-item-custom d-flex flex-column align-items-center text-muted" onclick="navigate('Barang')">
-                <i class="bi bi-star fs-5 mb-1"></i>
-                <small style="font-size: 0.7rem;">Barang</small>
-            </div>
-            <div class="nav-item-custom d-flex flex-column align-items-center text-muted" onclick="navigate('Riwayat')">
-                <i class="bi bi-star fs-5 mb-1"></i>
-                <small style="font-size: 0.7rem;">Riwayat</small>
-            </div>
-            <!-- Menu Aktif (Akun) -->
-            <div class="nav-item-custom d-flex flex-column align-items-center" onclick="navigate('Akun')">
-                <div class="active-pill d-flex flex-column align-items-center px-3 py-1">
-                    <i class="bi bi-star fs-5 mb-1 text-dark"></i>
-                    <small style="font-size: 0.7rem;" class="fw-bold text-dark">Akun</small>
+          <!-- Daftar Akun (Menggunakan kartu Bootstrap yang responsif dan serasi) -->
+          <div id="accounts-list" class="mt-3">
+            <!-- Akun 1: Siti Khadijah (Admin) -->
+            <div class="card account-card mb-3" data-name="Siti Khadijah" data-role="Admin">
+              <div class="card-body d-flex justify-content-between align-items-center p-3">
+                <div>
+                  <h5 class="fw-bold mb-1 text-dark">Siti Khadijah</h5>
+                  <span class="role-badge admin">Admin</span>
                 </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-success btn-sm px-3 fw-semibold" onclick="editAkun('Siti Khadijah')">
+                    Edit
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="hapusAkun('Siti Khadijah', this)">
+                    Hapus
+                  </button>
+                </div>
+              </div>
             </div>
-        </div>
 
+            <!-- Akun 2: Dhimaz (User) -->
+            <div class="card account-card mb-3" data-name="Dhimaz" data-role="User">
+              <div class="card-body d-flex justify-content-between align-items-center p-3">
+                <div>
+                  <h5 class="fw-bold mb-1 text-dark">Dhimaz</h5>
+                  <span class="role-badge user">User</span>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-success btn-sm px-3 fw-semibold" onclick="editAkun('Dhimaz')">
+                    Edit
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="hapusAkun('Dhimaz', this)">
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pesan ketika pencarian tidak ditemukan -->
+          <p id="empty-message" class="text-secondary mt-3" hidden>
+            Akun tidak ditemukan.
+          </p>
+        </div>
+      </main>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Script Fungsionalitas Tombol -->
+    <!-- Footer seragam dengan Dashboard -->
+    <footer class="footer-db">
+      <p class="mb-0">&copy; 2026 Gudang Pintar</p>
+    </footer>
+
+    <!-- Script Fungsionalitas Tombol & Pencarian -->
     <script>
-        function editAkun(nama) {
-            alert("Tombol Edit ditekan untuk akun: " + nama);
-            // Di aplikasi nyata, ini akan membuka modal atau halaman edit
-        }
+      function editAkun(nama) {
+        alert("Edit akun: " + nama);
+      }
 
-        function hapusAkun(nama) {
-            if(confirm("Apakah Anda yakin ingin menghapus akun " + nama + "?")) {
-                alert("Akun " + nama + " berhasil dihapus!");
-                // Logika untuk menghapus data
-            }
+      function hapusAkun(nama, btn) {
+        if (confirm("Apakah Anda yakin ingin menghapus akun " + nama + "?")) {
+          const card = btn.closest(".account-card");
+          if (card) {
+            card.remove();
+          }
+          alert("Akun " + nama + " berhasil dihapus!");
         }
+      }
 
-        function tambahAkun() {
-            alert("Tombol Tambah (+) ditekan. Membuka form tambah akun...");
-        }
+      function tambahAkun() {
+        const nama = prompt("Masukkan nama akun baru:");
+        if (!nama || !nama.trim()) return;
+        const role = prompt("Masukkan role (Admin/User):", "User") || "User";
 
-        function navigate(halaman) {
-            alert("Navigasi ke halaman: " + halaman);
-        }
+        const list = document.getElementById("accounts-list");
+        const card = document.createElement("div");
+        card.className = "card account-card mb-3";
+        card.setAttribute("data-name", nama.trim());
+        card.setAttribute("data-role", role.trim());
 
-        function goBack() {
-            alert("Kembali ke halaman sebelumnya");
-        }
+        const isRoleAdmin = role.trim().toLowerCase() === "admin";
+        const badgeClass = isRoleAdmin ? "admin" : "user";
 
-        function openChat() {
-            alert("Membuka fitur chat");
-        }
+        card.innerHTML = `
+          <div class="card-body d-flex justify-content-between align-items-center p-3">
+            <div>
+              <h5 class="fw-bold mb-1 text-dark">${nama.trim()}</h5>
+              <span class="role-badge ${badgeClass}">${role.trim()}</span>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-success btn-sm px-3 fw-semibold" onclick="editAkun('${nama.trim()}')">
+                Edit
+              </button>
+              <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="hapusAkun('${nama.trim()}', this)">
+                Hapus
+              </button>
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      }
 
-        function openMenu() {
-            alert("Membuka menu opsi lainnya");
-        }
+      // Pencarian akun berdasarkan nama atau role
+      const searchBar = document.getElementById("search-bar");
+      const emptyMessage = document.getElementById("empty-message");
+
+      searchBar.addEventListener("input", () => {
+        const keyword = searchBar.value.trim().toLowerCase();
+        const cards = document.querySelectorAll(".account-card");
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const name = (card.dataset.name || "").toLowerCase();
+          const role = (card.dataset.role || "").toLowerCase();
+          const matches = name.includes(keyword) || role.includes(keyword);
+
+          card.hidden = !matches;
+          if (matches) {
+            visibleCount++;
+          }
+        });
+
+        emptyMessage.hidden = visibleCount !== 0;
+      });
     </script>
-</body>
+  </body>
 </html>

@@ -1,81 +1,231 @@
-/* Mengatur background luar (area gelap di sekitar mobile) */
-body {
-    background-color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* =========================
+   HEADER GUDANG PINTAR
+========================= */
+
+.header-db {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #dee2e6;
+  z-index: 999;
 }
 
-/* Kontainer utama untuk membatasi lebar seperti layar HP */
-.mobile-container {
+.logo,
+.header-right {
+  flex: 1;
+}
+
+.logo {
+  color: #198754;
+  font-weight: bold;
+  font-size: 2rem;
+  white-space: nowrap;
+}
+
+.header-right {
+  min-width: 0;
+}
+
+.search-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.search-container form {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* =========================
+   LAYOUT & SIDEBAR
+========================= */
+
+.dashboard-layout {
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-db {
+  position: sticky;
+  top: 75px;
+  align-self: flex-start;
+  flex-shrink: 0;
+  width: 250px;
+  height: calc(100vh - 75px);
+  overflow-y: auto;
+}
+
+.nav-item {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.sidebar-link {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-item:hover .sidebar-link {
+  background-color: #e9ecef;
+}
+
+.active-link {
+  background-color: #e8f5ed;
+  color: #198754 !important;
+  font-weight: bold;
+}
+
+/* =========================
+   KONTEN UTAMA
+========================= */
+
+.main-content {
+  min-width: 0;
+  background-color: #f8f9fa;
+}
+
+.dashboard-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #212529;
+}
+
+.dashboard-description {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+/* =========================
+   KARTU & TABEL PENGELOLAAN AKUN
+========================= */
+
+.account-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.role-badge {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.role-badge.admin {
+  background-color: #e8f5ed;
+  color: #198754;
+}
+
+.role-badge.user {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-db {
+  padding: 15px 20px;
+  text-align: center;
+  color: #6c757d;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+}
+
+/* =========================
+   RESPONSIVE: TABLET
+========================= */
+
+@media (max-width: 768px) {
+  .header-db {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .header-right {
+    display: none;
+  }
+
+  .search-container {
+    flex: 1;
+  }
+
+  .sidebar-db {
+    width: 150px;
+    padding: 10px !important;
+  }
+
+  .sidebar-link {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE: MOBILE (HP)
+========================= */
+
+@media (max-width: 480px) {
+  .header-db {
+    flex-wrap: wrap;
+  }
+
+  .logo {
     width: 100%;
-    max-width: 400px; /* Lebar maksimal menyerupai HP */
-    height: 800px; /* Tinggi tetap untuk tampilan desktop */
-    max-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    border-radius: 15px; /* Sudut melengkung untuk tampilan desktop */
-}
+    flex: 1 0 100%;
+    font-size: 1.5rem;
+  }
 
-/* Warna hijau custom sesuai gambar */
-.header-green {
-    background-color: #9bf976; /* Warna hijau muda terang */
-}
+  .search-container {
+    flex: 1 0 100%;
+  }
 
-.btn-custom-green {
-    background-color: #9bf976;
-    color: #000;
-    border: none;
-    transition: all 0.2s ease;
-}
+  .dashboard-layout {
+    flex-direction: column;
+  }
 
-.btn-custom-green:hover {
-    background-color: #85e062; /* Sedikit lebih gelap saat di-hover */
-    color: #000;
-}
-
-/* Styling untuk Bottom Navigation */
-.nav-item-custom {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.nav-item-custom:active {
-    transform: scale(0.95); /* Efek menekan */
-}
-
-/* Pill hijau untuk menu yang aktif di bottom nav */
-.active-pill {
-    background-color: #9bf976;
-    border-radius: 20px;
+  .sidebar-db {
+    position: static;
     width: 100%;
-    transition: all 0.3s ease;
-}
+    height: auto;
+    border-right: 0 !important;
+    border-bottom: 1px solid #dee2e6;
+  }
 
-/* Styling Card agar lebih rapi */
-.card {
-    border-radius: 12px !important;
-    border: 1px solid #e0e0e0 !important;
-}
+  .sidebar-db .nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
 
-/* Menyesuaikan ukuran font pada tombol Edit/Hapus */
-.btn-sm {
+  .sidebar-db .nav-item {
+    flex: 1 1 auto;
+  }
+
+  .sidebar-link {
+    text-align: center;
     font-size: 0.8rem;
-    border-radius: 4px;
-}
+  }
 
-/* Menghilangkan outline default saat tombol diklik */
-button:focus {
-    box-shadow: none !important;
-}
-
-/* Responsif untuk layar HP asli */
-@media (max-width: 400px) {
-    .mobile-container {
-        height: 100vh;
-        border-radius: 0;
-    }
+  .main-content {
+    width: 100%;
+  }
 }
