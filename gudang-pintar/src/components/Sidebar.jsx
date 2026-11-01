@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -8,7 +9,7 @@ export default function Sidebar() {
         <ul className="nav flex-column gap-2">
           <li className="nav-item">
             <Link
-              href="/Dashboard"
+              to="/Dashboard"
               className="nav-link text-black rounded sidebar-link active-link"
             >
               Dashboard
@@ -17,7 +18,7 @@ export default function Sidebar() {
 
           <li className="nav-item">
             <Link
-              href="/barang"
+              to="/barang"
               className="nav-link text-black rounded sidebar-link"
             >
               Barang
@@ -26,7 +27,7 @@ export default function Sidebar() {
 
           <li className="nav-item">
             <Link
-              href="/transaksi"
+              to="/transaksi"
               className="nav-link text-black rounded sidebar-link"
             >
               Transaksi
@@ -35,7 +36,7 @@ export default function Sidebar() {
 
           <li className="nav-item">
             <Link
-              href="/history"
+              to="/history"
               className="nav-link text-black rounded sidebar-link"
             >
               Riwayat
@@ -44,7 +45,7 @@ export default function Sidebar() {
 
           <li className="nav-item">
             <Link
-              href="/akun"
+              to="/akun"
               className="nav-link text-black rounded sidebar-link"
             >
               Akun

@@ -11,8 +11,7 @@
   z-index: 999;
 }
 
-.logo,
-.header-right {
+.logo {
   flex: 1;
 }
 
@@ -21,10 +20,6 @@
   font-weight: bold;
   font-size: 2rem;
   white-space: nowrap;
-}
-
-.header-right {
-  min-width: 0;
 }
 
 .search-container {
@@ -37,6 +32,27 @@
 .search-container form {
   width: 100%;
   max-width: 400px;
+}
+
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
 }
 
 @media (max-width: 768px) {
