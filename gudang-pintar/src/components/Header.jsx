@@ -17,7 +17,9 @@ export default function Header({ searchQuery, setSearchQuery }) {
           />
         </form>
       </div>
-      <div className="header-right"></div>
+      <div className="header-right">
+        <button className="logout-btn">Log out</button>
+      </div>
     </header>
   );
 }
