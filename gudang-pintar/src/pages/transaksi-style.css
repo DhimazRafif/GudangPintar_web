@@ -60,3 +60,163 @@ main {
 .table td {
   vertical-align: middle;
 }
+
+.transaction-layout > main {
+  min-width: 0;
+}
+
+.transaction-modal-dialog {
+  max-width: calc(100% - 2rem);
+}
+
+.transaction-page .btn {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.transaction-page .btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.transaction-page .btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.transaction-page .btn:focus-visible,
+.transaction-page .btn-close:focus-visible {
+  outline: 3px solid rgba(25, 135, 84, 0.25);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.transaction-page .transaction-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.transaction-page .transaction-action-button--in {
+  color: #fff;
+  background: #198754;
+  border-color: #198754;
+}
+
+.transaction-page .transaction-action-button--in:hover {
+  color: #fff;
+  background: #157347;
+  border-color: #146c43;
+}
+
+.transaction-page .transaction-action-button--out {
+  color: #b02a37;
+  background: #fff;
+  border-color: #dc7b84;
+}
+
+.transaction-page .transaction-action-button--out:hover {
+  color: #842029;
+  background: #fff5f5;
+  border-color: #c85c67;
+}
+
+.transaction-page .btn-close {
+  transition: opacity 160ms ease, transform 120ms ease;
+}
+
+.transaction-page .btn-close:hover {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transaction-page .btn,
+  .transaction-page .btn-close {
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-db {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 12px 16px;
+  }
+
+  .header-db .logo {
+    flex: 1 1 auto;
+    font-size: 1.6rem;
+  }
+
+  .header-db .search-container {
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .header-db .header-right {
+    display: none;
+  }
+
+  .transaction-layout {
+    flex-direction: column;
+  }
+
+  .transaction-layout > .sidebar-db {
+    position: static;
+    top: auto;
+    width: 100%;
+    height: auto;
+    align-self: stretch;
+    border-right: 0 !important;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .transaction-layout > .sidebar-db .nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
+
+  .transaction-layout > .sidebar-db .nav-item {
+    flex: 1 1 120px;
+  }
+
+  .transaction-layout > main {
+    width: 100%;
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .transaction-page .transaction-action-button {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+
+  .transaction-modal-dialog {
+    max-width: calc(100% - 1rem);
+    margin: 0.5rem auto;
+  }
+
+  .transaction-modal-dialog .modal-content {
+    min-height: calc(100vh - 1rem);
+  }
+
+  .transaction-modal-dialog .modal-body {
+    padding: 1rem;
+  }
+
+  .transaction-modal-dialog .modal-footer {
+    flex-wrap: wrap;
+  }
+
+  .transaction-modal-dialog .modal-footer .btn {
+    flex: 1 1 120px;
+  }
+}
