@@ -5,10 +5,10 @@ export default function ItemCard({ item }) {
   let statusClass = "stock-aman";
   let statusText = "Aman";
 
-  if (item.stock === 0) {
+  if (item.quantity === 0) {
     statusClass = "stock-habis";
     statusText = "Habis";
-  } else if (item.stock <= 10) {
+  } else if (item.quantity <= 10) {
     statusClass = "stock-menipis";
     statusText = "Hampir habis";
   }
