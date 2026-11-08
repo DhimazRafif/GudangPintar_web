@@ -12,12 +12,17 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
+  const [showNotification, setShowNotification] = useState(true);
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
 
   const currentItems = items || [];
   const filteredItems = currentItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const warningItemsCount = currentItems.filter(
+    (item) => item.quantity <= item.notification_threshold,
+  ).length;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -42,6 +47,29 @@ export default function Dashboard() {
 
         <main className="main-content flex-grow-1">
           <div className="container-fluid p-3">
+            {showNotification &&
+              warningItemsCount > 0 &&
+              !isLoading &&
+              !error && (
+                <div
+                  className="alert alert-warning shadow-sm d-flex align-items-center justify-content-between mb-4"
+                  role="alert"
+                  style={{ borderLeft: "5px solid #ffc107" }}
+                >
+                  <div>
+                    <span className="fs-5 me-2"></span>
+                    <strong>Perhatian!</strong> Terdapat{" "}
+                    <strong>{warningItemsCount} barang</strong> yang stoknya
+                    menipis atau habis. Segera lakukan pengecekan.
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowNotification(false)}
+                    aria-label="Close"
+                  ></button>
+                </div>
+              )}
             <h1 className="dashboard-title">Daftar Barang</h1>
             <p className="dashboard-description">
               Pantau jumlah dan status stok barang di gudang.
