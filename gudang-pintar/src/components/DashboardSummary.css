@@ -1,0 +1,26 @@
+.summary-card {
+  border: 1px solid #b9bec2;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.icon-circle {
+  width: 55px;
+  height: 55px;
+  background-color: #02cd02;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin: 0 auto;
+}
+
+.warning-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.warning-list::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 10px;
+}

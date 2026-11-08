@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import ItemCard from "../components/ItemCard";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import { initialItems } from "../data";
+import DashboardSummary from "../components/DashboardSummary";
 import "./dashboard-style.css";
-import ItemCards from "../components/ItemCard";
+import useFetch from "../hooks/useFetch";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredItems = initialItems.filter((item) =>
+  const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
+
+  const currentItems = items || [];
+  const filteredItems = currentItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -27,14 +30,43 @@ export default function Dashboard() {
               Pantau jumlah dan status stok barang di gudang.
             </p>
 
-            <div className="item-list">
-              {filteredItems.map((item) => (
-                <ItemCards key={item.id} item={item} />
-              ))}
-            </div>
+            {error && (
+              <div
+                className="alert alert-danger text-center shadow-sm"
+                role="alert"
+              >
+                <p className="mb-2">{error}</p>
+                <button
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={refetch}
+                >
+                  Coba Lagi
+                </button>
+              </div>
+            )}
 
-            {filteredItems.length === 0 && (
-              <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
+            {isLoading && !error && (
+              <div className="text-center py-5">
+                <div className="spinner-border text-success" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2 text-secondary">Memuat data barang...</p>
+              </div>
+            )}
+
+            {!isLoading && !error && (
+              <>
+                <DashboardSummary items={currentItems} />
+                <div className="item-list">
+                  {filteredItems.map((item) => (
+                    <ItemCard key={item.barangid} item={item} />
+                  ))}
+                </div>
+
+                {filteredItems.length === 0 && (
+                  <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
+                )}
+              </>
             )}
           </div>
         </main>
