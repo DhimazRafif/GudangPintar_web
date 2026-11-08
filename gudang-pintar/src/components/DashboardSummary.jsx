@@ -3,12 +3,10 @@ import React from "react";
 export default function DashboardSummary({ items }) {
   if (!items || items.length === 0) return null;
 
-  const totalMakananMinuman = items.filter((item) =>
-    [1, 2, 3, 4, 5].includes(item.categoryid),
+  const totalMakananMinuman = items.filter(
+    (item) => item.categoryid === 2,
   ).length;
-  const totalNonMakanan = items.filter((item) =>
-    [6, 7, 8, 9, 10].includes(item.categoryid),
-  ).length;
+  const totalNonMakanan = items.filter((item) => item.categoryid === 1).length;
 
   const warningItems = items.filter(
     (item) => item.quantity <= item.notification_threshold,
