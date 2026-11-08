@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemCard from "../components/ItemCard";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
@@ -9,6 +9,9 @@ import useFetch from "../hooks/useFetch";
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
 
   const currentItems = items || [];
@@ -16,6 +19,20 @@ export default function Dashboard() {
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scroll({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -56,15 +73,59 @@ export default function Dashboard() {
 
             {!isLoading && !error && (
               <>
-                <DashboardSummary items={currentItems} />
+                <DashboardSummary items={filteredItems} />
                 <div className="item-list">
-                  {filteredItems.map((item) => (
+                  {displayedItems.map((item) => (
                     <ItemCard key={item.barangid} item={item} />
                   ))}
                 </div>
 
                 {filteredItems.length === 0 && (
                   <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
+                )}
+                {totalPages > 1 && (
+                  <nav
+                    aria-label="Navigasi Halaman Dashboard"
+                    className="mt-4 mb-2 d-flex justify-content-center"
+                  >
+                    <ul className="pagination pagination-sm">
+                      <li
+                        className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                      >
+                        <button
+                          className="page-link text-success"
+                          onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                          &laquo;prev
+                        </button>
+                      </li>
+
+                      {[...Array(totalPages)].map((_, index) => (
+                        <li
+                          key={index + 1}
+                          className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                        >
+                          <button
+                            className={`page-link ${currentPage === index + 1 ? "bg-success border-success text-white" : "text-success"}`}
+                            onClick={() => handlePageChange(index + 1)}
+                          >
+                            {index + 1}
+                          </button>
+                        </li>
+                      ))}
+
+                      <li
+                        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+                      >
+                        <button
+                          className="page-link text-success"
+                          onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                          Next &raquo;
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
                 )}
               </>
             )}
