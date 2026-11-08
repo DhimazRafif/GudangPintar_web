@@ -6,7 +6,7 @@
     "price": 3000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 1,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2Bh68kkObJoTTwAOqdlOdEgUHnzh4jK4kHODsu5_kuQ&s=10"
   },
@@ -28,7 +28,7 @@
     "price": 68000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 1,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -39,7 +39,7 @@
     "price": 16000,
     "notification_threshold": 10,
     "alert_state": "Hampir habis",
-    "categoryid": 1,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -50,7 +50,7 @@
     "price": 38000,
     "notification_threshold": 10,
     "alert_state": "Habis",
-    "categoryid": 1,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -83,7 +83,7 @@
     "price": 15000,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -94,7 +94,7 @@
     "price": 3500,
     "notification_threshold": 20,
     "alert_state": "Hampir habis",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -105,7 +105,7 @@
     "price": 3500,
     "notification_threshold": 24,
     "alert_state": "Aman",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -116,7 +116,7 @@
     "price": 6500,
     "notification_threshold": 12,
     "alert_state": "Aman",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -127,7 +127,7 @@
     "price": 11000,
     "notification_threshold": 15,
     "alert_state": "Hampir habis",
-    "categoryid": 4,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -138,7 +138,7 @@
     "price": 5000,
     "notification_threshold": 10,
     "alert_state": "Habis",
-    "categoryid": 4,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -149,7 +149,7 @@
     "price": 15000,
     "notification_threshold": 10,
     "alert_state": "Hampir habis",
-    "categoryid": 4,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -160,7 +160,7 @@
     "price": 8500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 4,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -171,7 +171,7 @@
     "price": 12500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 4,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -182,7 +182,7 @@
     "price": 10500,
     "notification_threshold": 15,
     "alert_state": "Hampir habis",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -193,7 +193,7 @@
     "price": 6000,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -204,7 +204,7 @@
     "price": 18500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -215,7 +215,7 @@
     "price": 3500,
     "notification_threshold": 24,
     "alert_state": "Habis",
-    "categoryid": 3,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -226,7 +226,7 @@
     "price": 24000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -237,7 +237,7 @@
     "price": 16500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -248,7 +248,7 @@
     "price": 11000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -259,7 +259,7 @@
     "price": 5000,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -270,7 +270,7 @@
     "price": 5000,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -281,7 +281,7 @@
     "price": 3500,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -292,7 +292,7 @@
     "price": 1500,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 5,
+    "categoryid": 2,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -325,9 +325,9 @@
     "price": 24000,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2Bh68kkObJoTTwAOqdlOdEgUHnzh4jK4kHODsu5_kuQ&s=10"
   },
   {
     "barangid": 31,
@@ -336,9 +336,9 @@
     "price": 26000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQydWxC4F4delN5ovj4FxK6wkhbRyATMY7c8HU-IwQww&s=10"
   },
   {
     "barangid": 32,
@@ -347,7 +347,7 @@
     "price": 25000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -358,7 +358,7 @@
     "price": 23000,
     "notification_threshold": 10,
     "alert_state": "Habis",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -369,7 +369,7 @@
     "price": 14500,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -380,7 +380,7 @@
     "price": 12000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 6,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -391,7 +391,7 @@
     "price": 21000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -402,7 +402,7 @@
     "price": 17500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -413,7 +413,7 @@
     "price": 16000,
     "notification_threshold": 15,
     "alert_state": "Hampir habis",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -424,7 +424,7 @@
     "price": 15000,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -435,7 +435,7 @@
     "price": 13000,
     "notification_threshold": 12,
     "alert_state": "Aman",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -446,7 +446,7 @@
     "price": 13500,
     "notification_threshold": 12,
     "alert_state": "Aman",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -457,7 +457,7 @@
     "price": 35000,
     "notification_threshold": 10,
     "alert_state": "Hampir habis",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -468,7 +468,7 @@
     "price": 38000,
     "notification_threshold": 10,
     "alert_state": "Habis",
-    "categoryid": 7,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -479,7 +479,7 @@
     "price": 12500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 8,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -490,7 +490,7 @@
     "price": 18000,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 8,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -501,7 +501,7 @@
     "price": 35000,
     "notification_threshold": 15,
     "alert_state": "Aman",
-    "categoryid": 8,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -512,7 +512,7 @@
     "price": 45000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 9,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -523,7 +523,7 @@
     "price": 55000,
     "notification_threshold": 10,
     "alert_state": "Hampir habis",
-    "categoryid": 9,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -534,7 +534,7 @@
     "price": 16000,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 8,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -545,7 +545,7 @@
     "price": 18500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 8,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -556,7 +556,7 @@
     "price": 15000,
     "notification_threshold": 20,
     "alert_state": "Aman",
-    "categoryid": 10,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
@@ -567,7 +567,7 @@
     "price": 6500,
     "notification_threshold": 10,
     "alert_state": "Aman",
-    "categoryid": 10,
+    "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   }
