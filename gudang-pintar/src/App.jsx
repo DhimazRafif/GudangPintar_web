@@ -11,7 +11,6 @@ function App() {
       <Route path="/" element={<Navigate to="/Dashboard" replace />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/transaksi" element={<Transaksi />} />
-      {/* Sidebar.jsx sudah memiliki Link ke /history. */}
       <Route path="/history" element={<History />} />
       <Route path="/akun" element={<PengelolaanAkun />} />
       <Route path="*" element={<Navigate to="/Dashboard" replace />} />
