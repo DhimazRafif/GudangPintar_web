@@ -1,8 +1,12 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import "./history-style.css";
+import {
+  getHistoryEntries,
+  HISTORY_STORAGE_KEY,
+  HISTORY_UPDATED_EVENT,
+} from "../services/historyService";
 
 const historyData = [
   { id: 1, action: "Ubah jumlah stok", itemName: "Air mineral", before: "7", after: "31", date: "4/6/2025" },
@@ -11,15 +15,35 @@ const historyData = [
   { id: 4, action: "Ubah kategori", itemName: "Air mineral", before: "Makanan dan minuman", after: "ATK", date: "4/6/2025" },
 ];
 
+function getChanges(entry) {
+  return Array.isArray(entry.changes)
+    ? entry.changes
+    : [{ itemName: entry.itemName, before: entry.before, after: entry.after }];
+}
+
 export default function History() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [savedHistory, setSavedHistory] = useState(getHistoryEntries);
 
-  // Header menerima state pencarian seperti pada halaman Dashboard.
+  useEffect(() => {
+    const updateHistory = () => setSavedHistory(getHistoryEntries());
+    const handleStorage = (event) => {
+      if (event.key === HISTORY_STORAGE_KEY) updateHistory();
+    };
+
+    window.addEventListener(HISTORY_UPDATED_EVENT, updateHistory);
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener(HISTORY_UPDATED_EVENT, updateHistory);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
   const keyword = searchQuery.trim().toLowerCase();
-  const filteredHistory = historyData.filter((entry) =>
-    [entry.action, entry.itemName, entry.before, entry.after, entry.date].some(
-      (value) => value.toLowerCase().includes(keyword),
-    ),
+  const filteredHistory = [...savedHistory, ...historyData].filter((entry) =>
+    [entry.action, entry.date, ...getChanges(entry).flatMap((change) => [
+      change.itemName, change.before, change.after,
+    ])].some((value) => String(value ?? "").toLowerCase().includes(keyword)),
   );
 
   return (
@@ -41,12 +65,17 @@ export default function History() {
                       <span>{entry.action}</span>
                       <time className="history-date">{entry.date}</time>
                     </div>
-                    <div className="history-detail">
-                      <strong className="history-item-name">{entry.itemName}</strong>
-                      <span className="history-old-value">{entry.before}</span>
-                      <span className="history-arrow" aria-label="menjadi">→</span>
-                      <span className="history-new-value">{entry.after}</span>
-                    </div>
+                    {getChanges(entry).map((change, index) => (
+                      <div
+                        className={`history-detail${index > 0 ? " border-top" : ""}`}
+                        key={`${entry.id}-${index}`}
+                      >
+                        <strong className="history-item-name">{change.itemName}</strong>
+                        <span className="history-old-value">{change.before}</span>
+                        <span className="history-arrow" aria-label="menjadi">→</span>
+                        <span className="history-new-value">{change.after}</span>
+                      </div>
+                    ))}
                   </div>
                 </article>
               ))
