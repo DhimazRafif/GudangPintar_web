@@ -32,12 +32,6 @@
   background-color: #e9ecef;
 }
 
-.active-link {
-  background-color: #e8f5ed;
-  color: #198754 !important;
-  font-weight: bold;
-}
-
 @media (max-width: 768px) {
   .sidebar-db {
     position: sticky !important;

@@ -10,7 +10,7 @@ export default function Sidebar() {
           <li className="nav-item">
             <Link
               to="/Dashboard"
-              className="nav-link text-black rounded sidebar-link active-link"
+              className="nav-link text-black rounded sidebar-link"
             >
               Dashboard
             </Link>
