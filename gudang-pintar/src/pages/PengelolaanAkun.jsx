@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import "../pengelolaan_akun-style.css"; 
-import "../dashboard-style.css";
+import "./pengelolaan_akun-style.css"; 
+import "./dashboard-style.css";
 
 export default function PengelolaanAkun() {
   // State untuk data akun (dummy)
