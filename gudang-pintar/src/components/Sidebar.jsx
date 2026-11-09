@@ -12,7 +12,7 @@ export default function Sidebar() {
               to="/Dashboard"
               className="nav-link text-black rounded sidebar-link"
             >
-              Dashboard
+              Dasbor
             </Link>
           </li>
 
@@ -21,7 +21,7 @@ export default function Sidebar() {
               to="/supplier"
               className="nav-link text-black rounded sidebar-link"
             >
-              Supplier
+              Pemasok
             </Link>
           </li>
 

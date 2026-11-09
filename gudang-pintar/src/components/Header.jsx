@@ -26,7 +26,7 @@ export default function Header({ searchQuery, setSearchQuery }) {
         </form>
       </div>
       <div className="header-right">
-        <button className="logout-btn" onClick={handleLogout}>Log out</button>
+        <button className="logout-btn" onClick={handleLogout}>Keluar</button>
       </div>
     </header>
   );

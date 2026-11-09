@@ -20,7 +20,7 @@ export default function Login() {
       form.password.trim() === DEMO_ADMIN.password;
 
     if (!isValid) {
-      setMessage("Email, username, atau password salah.");
+      setMessage("Email, nama pengguna, atau kata sandi salah.");
       return;
     }
 
@@ -52,26 +52,26 @@ export default function Login() {
           </button>
           <div className="popup-brand">Gudang Pintar</div>
           <h1 id="login-title">Masuk</h1>
-          <p className="login-intro">Masuk ke akun toko kamu</p>
+          <p className="login-intro">Masuk ke akun toko Anda</p>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Gmail</label>
+              <label htmlFor="email" className="form-label">Alamat email</label>
               <input className="form-control" type="email" id="email" name="email" placeholder="nama@gmail.com" autoComplete="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} required />
             </div>
             <div className="mb-3">
-              <label htmlFor="username" className="form-label">Username</label>
-              <input className="form-control" type="text" id="username" name="username" placeholder="Masukkan username" autoComplete="username" value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} required />
+              <label htmlFor="username" className="form-label">Nama pengguna</label>
+              <input className="form-control" type="text" id="username" name="username" placeholder="Masukkan nama pengguna" autoComplete="username" value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} required />
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input className="form-control" type="password" id="password" name="password" placeholder="Masukkan password" autoComplete="current-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required />
+              <label htmlFor="password" className="form-label">Kata sandi</label>
+              <input className="form-control" type="password" id="password" name="password" placeholder="Masukkan kata sandi" autoComplete="current-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required />
             </div>
             {message && <div className="alert alert-danger py-2" role="alert">{message}</div>}
             <button className="btn btn-login w-100" type="submit">Masuk</button>
           </form>
 
-          <p className="signup-note mb-0">Belum punya akun? Hubungi admin toko.</p>
+          <p className="signup-note mb-0">Belum memiliki akun? Hubungi admin toko.</p>
         </section>
       </main>
     </div>
