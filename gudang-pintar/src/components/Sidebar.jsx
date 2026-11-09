@@ -4,9 +4,9 @@ import "./Sidebar.css";
 
 export default function Sidebar() {
   return (
-    <aside className="sidebar-db bg-white p-3 border-end d-flex flex-column">
+    <aside className="sidebar-db bg-white p-3 border-bottom border-md-end d-flex flex-column">
       <nav className="flex-grow-1">
-        <ul className="nav flex-column gap-2">
+        <ul className="nav flex-row flex-md-column gap-2 flex-nowrap overflow-x-auto pb-2">
           <li className="nav-item">
             <Link
               to="/Dashboard"

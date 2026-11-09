@@ -15,7 +15,7 @@ export default function DashboardSummary({ items }) {
 
   return (
     <div className="row mb-4">
-      <div className="col-md-3 col-sm-6 mb-3">
+      <div className="col-12 col-md-3 col-sm-6 mb-3">
         <div className="card h-100 summary-card text-center">
           <div className="card-body d-flex flex-column justify-content-center">
             <div className="icon-circle mb-3">
@@ -40,7 +40,7 @@ export default function DashboardSummary({ items }) {
         </div>
       </div>
 
-      <div className="col-md-3 col-sm-6 mb-3">
+      <div className="col-12 col-md-3 col-sm-6 mb-3">
         <div className="card h-100 summary-card text-center">
           <div className="card-body d-flex flex-column justify-content-center">
             <div className="icon-circle mb-3">
@@ -61,7 +61,7 @@ export default function DashboardSummary({ items }) {
         </div>
       </div>
 
-      <div className="col-md-6 mb-3">
+      <div className="col-12 col-md-6 mb-3">
         <div className="card h-100 summary-card">
           <div className="card-body d-flex flex-column">
             <h6 className="fw-bold text-dark mb-3">Peringatan Stok</h6>
