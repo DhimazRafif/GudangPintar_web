@@ -18,6 +18,15 @@ export default function Sidebar() {
 
           <li className="nav-item">
             <Link
+              to="/supplier"
+              className="nav-link text-black rounded sidebar-link"
+            >
+              Supplier
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link
               to="/barang"
               className="nav-link text-black rounded sidebar-link"
             >

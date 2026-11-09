@@ -1,7 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
 export default function Header({ searchQuery, setSearchQuery }) {
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    sessionStorage.removeItem("gp-admin-session");
+    navigate("/login", { replace: true });
+  }
+
   return (
     <header className="header-db">
       <div className="logo"> Gudang Pintar</div>
@@ -18,7 +26,7 @@ export default function Header({ searchQuery, setSearchQuery }) {
         </form>
       </div>
       <div className="header-right">
-        <button className="logout-btn">Log out</button>
+        <button className="logout-btn" onClick={handleLogout}>Log out</button>
       </div>
     </header>
   );
