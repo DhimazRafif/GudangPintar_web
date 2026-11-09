@@ -1,80 +1,16 @@
-.header-db {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid grey;
-  z-index: 999;
-}
-
-.logo,
-.header-right {
-  flex: 1;
-}
-
-.logo {
-  color: green;
-  font-weight: bold;
-  font-size: 2rem;
-}
-
-.search-container {
-  flex: 2;
-  display: flex;
-  justify-content: center;
-}
-
-.search-container form {
-  width: 100%;
-  max-width: 400px;
-}
-
-.search-bar {
-  align-items: center;
-}
-
-.sidebar-db {
-  position: sticky;
-  top: 75px;
-  align-self: flex-start;
-  height: calc(100vh - 75px);
-}
-
-.item {
-  justify-content: space-between;
-}
-
-.card {
-  height: 100%;
-  width: 155px;
-  margin-top: 5px;
-  margin-left: 4px;
-}
-
-.nav-item {
-  border: 1px groove black;
-  border-radius: 5px;
-}
-
-.nav-item:hover {
-  background-color: grey;
-}
-
 .history-main {
   min-width: 0;
 }
 
 .history-list {
-  padding: 0 5px 10px 0;
+  padding-bottom: 10px;
 }
 
 .history-card {
-  width: auto;
+  width: 100%;
   height: auto;
   margin-bottom: 8px;
+  border-radius: 8px;
 }
 
 .history-card .card-body {
@@ -91,31 +27,30 @@
 .history-date {
   color: #777;
   font-weight: normal;
+  white-space: nowrap;
 }
 
 .history-detail {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(100px, auto) 45px minmax(
-      80px,
-      auto
-    );
+  grid-template-columns: minmax(0, 1fr) minmax(100px, auto) 45px minmax(80px, auto);
   align-items: center;
   gap: 20px;
   min-height: 80px;
 }
 
-.item-name,
-.old-value,
-.new-value {
+.history-item-name,
+.history-old-value,
+.history-new-value {
   font-size: 18px;
 }
 
-.old-value,
-.new-value {
+.history-old-value,
+.history-new-value {
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
-.arrow {
+.history-arrow {
   font-size: 34px;
   line-height: 1;
   text-align: center;
@@ -131,14 +66,13 @@
     gap: 8px;
   }
 
-  .item-name {
+  .history-item-name {
     grid-column: 1 / -1;
     margin-top: 12px;
   }
 
-  .old-value,
-  .new-value {
+  .history-old-value,
+  .history-new-value {
     font-size: 14px;
-    overflow-wrap: anywhere;
   }
 }
