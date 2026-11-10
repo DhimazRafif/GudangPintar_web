@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import "./transaksi-style.css";
+import { recordTransactionStockHistory } from "../services/historyService";
 
 // ID pengguna contoh untuk menggantikan user yang nantinya berasal dari autentikasi.
 const MOCK_USER_ID = 1;
@@ -195,6 +196,10 @@ export default function Transaksi() {
     setTransactions((currentTransactions) => [...currentTransactions, transaction]);
     setTransactionDetails((currentDetails) => [...currentDetails, ...details]);
     setStockHistory((currentHistory) => [...currentHistory, ...newStockHistory]);
+
+    // Catat perubahan stok hanya setelah transaksi berhasil divalidasi.
+    recordTransactionStockHistory(selectedItems, type);
+    
     setNextTransactionId((currentId) => currentId + 1);
     setNextDetailId((currentId) => currentId + details.length);
     setNextHistoryId((currentId) => currentId + newStockHistory.length);
