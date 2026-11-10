@@ -27,7 +27,8 @@ export default function ItemCard({ item }) {
           Harga: Rp{item.price.toLocaleString("id-ID")}
         </p>
         <p className="card-text mb-2">
-          Jumlah: <strong className="stock-quantity">{item.stock}</strong> unit
+          Jumlah: <strong className="stock-quantity">{item.quantity}</strong>{" "}
+          unit
         </p>
         <span className={`stock-status ${statusClass}`}>{statusText}</span>
       </div>

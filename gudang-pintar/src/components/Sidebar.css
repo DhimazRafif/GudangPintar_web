@@ -60,7 +60,7 @@
     display: none;
   }
 
-  .sidebar-db.nav {
+  .sidebar-db .nav {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -71,7 +71,7 @@
 
   .sidebar-link {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     padding: 8px 15px;
     white-space: nowrap;
   }
