@@ -42,7 +42,7 @@ export default function Dashboard() {
     <div className="d-flex flex-column min-vh-100">
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      <div className="dashboard-layout d-flex flex-column flex-md-row">
+      <div className="dashboard-layout d-flex">
         <Sidebar />
 
         <main className="main-content flex-grow-1">
