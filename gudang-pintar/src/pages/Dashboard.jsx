@@ -9,17 +9,18 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 18;
 
   const [showNotification, setShowNotification] = useState(true);
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
 
   const currentItems = items || [];
-  const filteredItems = currentItems.filter((item) =>
+  const activeItems = currentItems.filter((item) => item.isActive === 1);
+  const filteredItems = activeItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const warningItemsCount = currentItems.filter(
+  const warningItemsCount = activeItems.filter(
     (item) => item.quantity <= item.notification_threshold,
   ).length;
 
@@ -84,7 +85,7 @@ export default function Dashboard() {
 
       {!isLoading && !error && (
         <>
-          <DashboardSummary items={filteredItems} />
+          <DashboardSummary items={activeItems} />
           <div className="item-list">
             {displayedItems.map((item) => (
               <ItemCard key={item.barangid} item={item} />
