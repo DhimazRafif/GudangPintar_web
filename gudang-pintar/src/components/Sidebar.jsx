@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar({ isOpen, closeSidebar }) {
@@ -20,48 +20,53 @@ export default function Sidebar({ isOpen, closeSidebar }) {
         <nav className="flex-grow-1">
           <ul className="nav flex-column gap-2 pb-2">
             <li className="nav-item">
-              <Link
+              <NavLink
                 to="/Dashboard"
-                className="nav-link text-black rounded sidebar-link"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
               >
                 Dashboard
-              </Link>
+              </NavLink>
             </li>
 
             <li className="nav-item">
-              <Link
+              <NavLink
                 to="/barang"
-                className="nav-link text-black rounded sidebar-link"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
               >
                 Barang
-              </Link>
+              </NavLink>
             </li>
 
             <li className="nav-item">
-              <Link
+              <NavLink
                 to="/transaksi"
-                className="nav-link text-black rounded sidebar-link"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
               >
                 Transaksi
-              </Link>
+              </NavLink>
             </li>
 
             <li className="nav-item">
-              <Link
+              <NavLink
                 to="/history"
-                className="nav-link text-black rounded sidebar-link"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
               >
                 Riwayat
-              </Link>
+              </NavLink>
             </li>
 
             <li className="nav-item">
-              <Link
+              <NavLink
                 to="/akun"
-                className="nav-link text-black rounded sidebar-link"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
               >
                 Akun
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>
