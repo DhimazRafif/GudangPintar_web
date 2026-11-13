@@ -570,5 +570,16 @@
     "categoryid": 1,
     "isActive": 1,
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+  },
+  {
+    "barangid": 52,
+    "name": "Lem G Super KW",
+    "quantity": 15,
+    "price": 6500,
+    "notification_threshold": 10,
+    "alert_state": "Aman",
+    "categoryid": 1,
+    "isActive": 2,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   }
 ]

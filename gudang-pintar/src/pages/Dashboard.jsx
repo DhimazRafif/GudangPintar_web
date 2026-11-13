@@ -9,6 +9,9 @@ import useFetch from "../hooks/useFetch";
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
@@ -40,10 +43,17 @@ export default function Dashboard() {
   };
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Header
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        toggleSidebar={toggleSidebar}
+      />
 
       <div className="dashboard-layout d-flex">
-        <Sidebar />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          closeSidebar={() => setIsSidebarOpen(false)}
+        />
 
         <main className="main-content flex-grow-1">
           <div className="container-fluid p-3">

@@ -1,8 +1,3 @@
-.dashboard-layout {
-  flex: 1;
-  min-height: 0;
-}
-
 .sidebar-db {
   position: sticky;
   top: 75px;
@@ -11,9 +6,9 @@
   width: 250px;
   height: calc(100vh - 75px);
   overflow-y: auto;
-
   z-index: 1020;
   background-color: white;
+  transition: transform 0.3s ease-in-out;
 }
 
 .nav-item {
@@ -26,53 +21,57 @@
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
+  text-align: left;
+  padding: 8px 15px;
 }
 
 .nav-item:hover .sidebar-link {
   background-color: #e9ecef;
 }
 
-@media (max-width: 768px) {
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+
+@media (max-width: 767px) {
   .sidebar-db {
-    position: sticky !important;
-    top: 115px !important;
-    z-index: 1020 !important;
-    background-color: white;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0;
+    left: auto;
+    height: 100vh !important;
+    z-index: 1050 !important;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
+    transform: translateX(100%);
+    width: 250px !important;
+  }
 
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    border-right: none !important;
-    border-bottom: 1px solid #dee2e6;
-    padding: 10px !important;
-    flex-shrink: 0;
+  .sidebar-db.open {
+    transform: translateX(0);
   }
 
   .sidebar-db .nav {
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    gap: 10px;
-    padding-bottom: 5px;
-  }
-
-  .sidebar-db .nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .sidebar-db .nav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    flex-direction: column !important;
+    overflow-x: hidden;
   }
 
   .sidebar-db .nav-item {
-    flex: 0 0 auto;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 8px;
   }
 
   .sidebar-link {
-    text-align: center;
-    font-size: 0.8rem;
-    padding: 8px 15px;
-    white-space: nowrap;
+    text-align: left !important;
+    font-size: 1rem;
+    padding: 10px 15px;
+    display: block;
   }
 }
