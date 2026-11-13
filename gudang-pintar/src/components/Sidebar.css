@@ -18,6 +18,7 @@
 }
 
 .sidebar-link {
+  color: #141515;
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -27,6 +28,14 @@
 
 .nav-item:hover .sidebar-link {
   background-color: #e9ecef;
+  color: #141515;
+}
+
+.sidebar-link.active {
+  background-color: #198754 !important;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(25, 135, 84, 0.2);
 }
 
 .sidebar-overlay {
