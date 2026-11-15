@@ -6,6 +6,7 @@ import useFetch from "../hooks/useFetch";
 import MainLayout from "../layouts/MainLayout";
 import Pagination from "../components/common/Pagination";
 import FilterGroup from "../components/common/FilterGroup";
+import Button from "../components/common/Button";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,6 +124,9 @@ export default function Dashboard() {
     setCurrentPage(pageNumber);
     window.scroll({ top: 0, behavior: "smooth" });
   };
+
+  const isFilterActive =
+    searchQuery !== "" || selectedCategory !== "all" || selectedStock !== "all";
   return (
     <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
       {showNotification && warningItemsCount > 0 && !isLoading && !error && (
@@ -171,20 +175,45 @@ export default function Dashboard() {
       {!isLoading && !error && (
         <>
           <DashboardSummary items={activeItems} />
+          <div
+            className="bg-white p-3 rounded-3 border mb-3 shadow-sm d-flex flex-column flex-md-row align-items-stretch align-items-md-end justify-content-between gap-3"
+            role="region"
+            aria-label="Filter Group Daftar Barang"
+          >
+            <div className="d-flex flex-column flex-sm-row gap-3 flex-grow-1">
+              <FilterGroup
+                id="filter-kategori"
+                label="Kategori Barang"
+                options={categoryOptions}
+                selectedValue={selectedCategory}
+                onChange={setSelectedCategory}
+              />
 
-          <FilterGroup
-            label="Kategori Barang:"
-            options={categoryOptions}
-            selectedValue={selectedCategory}
-            onChange={setSelectedCategory}
-          />
+              <FilterGroup
+                id="filter-status-stok"
+                label="Status Stok"
+                options={stockOptions}
+                selectedValue={selectedStock}
+                onChange={setSelectedStock}
+              />
+            </div>
 
-          <FilterGroup
-            label="Status Stok:"
-            options={stockOptions}
-            selectedValue={selectedStock}
-            onChange={setSelectedStock}
-          />
+            {isFilterActive && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("all");
+                  setSelectedStock("all");
+                }}
+                title="Kembalikan semua filter ke pengaturan awal"
+              >
+                Reset Filter
+              </Button>
+            )}
+          </div>
+
           <div className="item-list">
             {displayedItems.map((item) => (
               <ItemCard key={item.barangid} item={item} />
