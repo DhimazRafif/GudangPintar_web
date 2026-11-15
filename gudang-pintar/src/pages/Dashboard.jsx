@@ -5,10 +5,12 @@ import "./Dashboard.css";
 import useFetch from "../hooks/useFetch";
 import MainLayout from "../layouts/MainLayout";
 import Pagination from "../components/common/Pagination";
+import FilterGroup from "../components/common/FilterGroup";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStock, setSelectedStock] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
 
@@ -17,9 +19,91 @@ export default function Dashboard() {
 
   const currentItems = items || [];
   const activeItems = currentItems.filter((item) => item.isActive === 1);
-  const filteredItems = activeItems.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const checkCategory = (item) =>
+    selectedCategory === "all" || item.categoryid === selectedCategory;
+
+  const checkStockStatus = (item) => {
+    if (selectedStock === "all") return true;
+    if (selectedStock === "habis") return item.quantity === 0;
+    if (selectedStock === "menipis") {
+      return item.quantity > 0 && item.quantity <= item.notification_threshold;
+    }
+    if (selectedStock === "aman") {
+      return item.quantity > item.notification_threshold;
+    }
+    return true;
+  };
+
+  const itemsForCategoryCount = activeItems.filter(checkStockStatus);
+  const categoryOptions = [
+    {
+      value: "all",
+      label: "Semua Kategori",
+      count: itemsForCategoryCount.length,
+      tooltip: "Tampilkan seluruh kategori barang",
+    },
+    {
+      value: 2,
+      label: "Makanan & Minuman",
+      count: itemsForCategoryCount.filter((item) => item.categoryid === 2)
+        .length,
+      tooltip: "Tampilkan hanya kategori Makanan & Minuman",
+    },
+    {
+      value: 1,
+      label: "Kebutuhan & ATK",
+      count: itemsForCategoryCount.filter((item) => item.categoryid === 1)
+        .length,
+      tooltip: "Tampilkan hanya kategori Kebutuhan & ATK",
+    },
+  ];
+
+  const itemsForStockCount = activeItems.filter(checkCategory);
+  const stockOptions = [
+    {
+      value: "all",
+      label: "Semua Status",
+      count: itemsForStockCount.length,
+      tooltip: "Tampilkan seluruh status ketersediaan stok",
+    },
+    {
+      value: "aman",
+      label: "Stok Aman",
+      count: itemsForStockCount.filter(
+        (item) => item.quantity > item.notification_threshold,
+      ).length,
+      activeVariant: "primary",
+      idleVariant: "filterIdle",
+      tooltip: "Tampilkan barang dengan stok di atas batas minimum",
+    },
+    {
+      value: "menipis",
+      label: "Stok Menipis",
+      count: itemsForStockCount.filter(
+        (item) =>
+          item.quantity > 0 && item.quantity <= item.notification_threshold,
+      ).length,
+      activeVariant: "warning",
+      idleVariant: "secondary",
+      tooltip: "Tampilkan barang yang hampir habis",
+    },
+    {
+      value: "habis",
+      label: "Stok Habis",
+      count: itemsForStockCount.filter((item) => item.quantity === 0).length,
+      activeVariant: "danger",
+      idleVariant: "secondary",
+      tooltip: "Tampilkan barang yang stoknya 0",
+    },
+  ];
+
+  const filteredItems = activeItems.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return checkCategory(item) && checkStockStatus(item) && matchesSearch;
+  });
 
   const warningItemsCount = activeItems.filter(
     (item) => item.quantity <= item.notification_threshold,
@@ -87,6 +171,20 @@ export default function Dashboard() {
       {!isLoading && !error && (
         <>
           <DashboardSummary items={activeItems} />
+
+          <FilterGroup
+            label="Kategori Barang:"
+            options={categoryOptions}
+            selectedValue={selectedCategory}
+            onChange={setSelectedCategory}
+          />
+
+          <FilterGroup
+            label="Status Stok:"
+            options={stockOptions}
+            selectedValue={selectedStock}
+            onChange={setSelectedStock}
+          />
           <div className="item-list">
             {displayedItems.map((item) => (
               <ItemCard key={item.barangid} item={item} />
@@ -94,8 +192,24 @@ export default function Dashboard() {
           </div>
 
           {filteredItems.length === 0 && (
-            <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
+            <div className="text-center py-4 bg-white rounded-3 border mt-2">
+              <p className="text-secondary mb-2">Barang tidak ditemukan.</p>
+              {isFilterActive && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                    setSelectedStock("all");
+                  }}
+                >
+                  Reset Semua Filter
+                </Button>
+              )}
+            </div>
           )}
+
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
