@@ -327,7 +327,7 @@
     "alert_state": "Aman",
     "categoryid": 1,
     "isActive": 1,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2Bh68kkObJoTTwAOqdlOdEgUHnzh4jK4kHODsu5_kuQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
   {
     "barangid": 31,
@@ -338,7 +338,7 @@
     "alert_state": "Aman",
     "categoryid": 1,
     "isActive": 1,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQydWxC4F4delN5ovj4FxK6wkhbRyATMY7c8HU-IwQww&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
   },
   {
     "barangid": 32,
@@ -565,6 +565,50 @@
     "name": "Lem G Super",
     "quantity": 15,
     "price": 6500,
+    "notification_threshold": 10,
+    "alert_state": "Aman",
+    "categoryid": 1,
+    "isActive": 1,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+  },
+  {
+    "barangid": 53,
+    "name": "Lem G Super KW",
+    "quantity": 15,
+    "price": 6500,
+    "notification_threshold": 10,
+    "alert_state": "Aman",
+    "categoryid": 1,
+    "isActive": 0,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+  },
+  {
+    "barangid": 54,
+    "name": "Supermi isi 2",
+    "quantity": 15,
+    "price": 6500,
+    "notification_threshold": 10,
+    "alert_state": "Aman",
+    "categoryid": 1,
+    "isActive": 1,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+  },
+  {
+    "barangid": 55,
+    "name": "Lem G Super duper KW",
+    "quantity": 15,
+    "price": 6500,
+    "notification_threshold": 10,
+    "alert_state": "Aman",
+    "categoryid": 1,
+    "isActive": 1,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iKPMqwz7G27fyHxvGAEq2CkH1hW3PGaByP8YiP6VeA&s=10"
+  },
+  {
+    "barangid": 56,
+    "name": "Sandal Japit",
+    "quantity": 15,
+    "price": 10000,
     "notification_threshold": 10,
     "alert_state": "Aman",
     "categoryid": 1,

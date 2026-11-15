@@ -39,14 +39,7 @@
   border-top: 1px solid #dee2e6;
 }
 
-@media (max-width: 768px) {
-  .item-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
+@media (max-width: 767px) {
   .dashboard-layout {
     flex-direction: column;
   }
@@ -55,6 +48,13 @@
     width: 100%;
   }
 
+  .item-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
   .item-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;

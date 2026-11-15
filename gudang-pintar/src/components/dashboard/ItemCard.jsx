@@ -1,5 +1,6 @@
 import React from "react";
 import "./ItemCard.css";
+import formatRupiah from "../../utils/formatCurrency";
 
 export default function ItemCard({ item }) {
   let statusClass = "stock-aman";
@@ -24,10 +25,11 @@ export default function ItemCard({ item }) {
       <div className="card-body">
         <h2 className="card-title">{item.name}</h2>
         <p className="card-text mb-2">
-          Harga: Rp{item.price.toLocaleString("id-ID")}
+          Harga: <strong>{formatRupiah(item.price)}</strong>
         </p>
         <p className="card-text mb-2">
-          Jumlah: <strong className="stock-quantity">{item.stock}</strong> unit
+          Jumlah: <strong className="stock-quantity">{item.quantity}</strong>{" "}
+          unit
         </p>
         <span className={`stock-status ${statusClass}`}>{statusText}</span>
       </div>

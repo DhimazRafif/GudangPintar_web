@@ -1,0 +1,18 @@
+.filter-dropdown-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+.filter-select {
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .filter-dropdown-group {
+    width: 100%;
+    min-width: 0;
+  }
+}

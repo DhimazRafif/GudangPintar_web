@@ -1,0 +1,32 @@
+/* =========================
+   KARTU & TABEL PENGELOLAAN AKUN
+========================= */
+
+.account-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important; /* tambahkan !important agar menimpa shadow-sm */
+  transform: translateY(-2px);
+}
+
+.role-badge {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.role-badge.admin {
+  background-color: #e8f5ed;
+  color: #198754;
+}
+
+.role-badge.user {
+  background-color: #e9ecef;
+  color: #495057;
+}

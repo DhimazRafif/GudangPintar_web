@@ -1,32 +1,126 @@
 import React, { useState, useEffect } from "react";
-import ItemCard from "../components/ItemCard";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import DashboardSummary from "../components/DashboardSummary";
-import "./dashboard-style.css";
+import ItemCard from "../components/dashboard/ItemCard";
+import DashboardSummary from "../components/dashboard/DashboardSummary";
+import "./Dashboard.css";
 import useFetch from "../hooks/useFetch";
+import MainLayout from "../app-layouts/MainLayout";
+import Pagination from "../components/common/Pagination";
+import FilterGroup from "../components/common/FilterGroup";
+import Button from "../components/common/Button";
+import useNotification from "../hooks/useNotification";
 
 export default function Dashboard() {
+  const { notify } = useNotification();
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStock, setSelectedStock] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 18;
 
-  const [showNotification, setShowNotification] = useState(true);
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
 
-  const currentItems = items || [];
-  const filteredItems = currentItems.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  useEffect(() => {
+    if (error) {
+      notify({ type: "danger", title: "Gagal memuat barang", message: error });
+    }
+  }, [error, notify]);
 
-  const warningItemsCount = currentItems.filter(
+  const currentItems = items || [];
+  const activeItems = currentItems.filter((item) => item.isActive === 1);
+  const checkCategory = (item) =>
+    selectedCategory === "all" || item.categoryid === selectedCategory;
+
+  const checkStockStatus = (item) => {
+    if (selectedStock === "all") return true;
+    if (selectedStock === "habis") return item.quantity === 0;
+    if (selectedStock === "menipis") {
+      return item.quantity > 0 && item.quantity <= item.notification_threshold;
+    }
+    if (selectedStock === "aman") {
+      return item.quantity > item.notification_threshold;
+    }
+    return true;
+  };
+
+  const itemsForCategoryCount = activeItems.filter(checkStockStatus);
+  const categoryOptions = [
+    {
+      value: "all",
+      label: "Semua Kategori",
+      count: itemsForCategoryCount.length,
+      tooltip: "Tampilkan seluruh kategori barang",
+    },
+    {
+      value: 2,
+      label: "Makanan & Minuman",
+      count: itemsForCategoryCount.filter((item) => item.categoryid === 2)
+        .length,
+      tooltip: "Tampilkan hanya kategori Makanan & Minuman",
+    },
+    {
+      value: 1,
+      label: "Kebutuhan & ATK",
+      count: itemsForCategoryCount.filter((item) => item.categoryid === 1)
+        .length,
+      tooltip: "Tampilkan hanya kategori Kebutuhan & ATK",
+    },
+  ];
+
+  const itemsForStockCount = activeItems.filter(checkCategory);
+  const stockOptions = [
+    {
+      value: "all",
+      label: "Semua Status",
+      count: itemsForStockCount.length,
+      tooltip: "Tampilkan seluruh status ketersediaan stok",
+    },
+    {
+      value: "aman",
+      label: "Stok Aman",
+      count: itemsForStockCount.filter(
+        (item) => item.quantity > item.notification_threshold,
+      ).length,
+    },
+    {
+      value: "menipis",
+      label: "Stok Menipis",
+      count: itemsForStockCount.filter(
+        (item) =>
+          item.quantity > 0 && item.quantity <= item.notification_threshold,
+      ).length,
+    },
+    {
+      value: "habis",
+      label: "Stok Habis",
+      count: itemsForStockCount.filter((item) => item.quantity === 0).length,
+    },
+  ];
+
+  const filteredItems = activeItems.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return checkCategory(item) && checkStockStatus(item) && matchesSearch;
+  });
+
+  const warningItemsCount = activeItems.filter(
     (item) => item.quantity <= item.notification_threshold,
   ).length;
 
   useEffect(() => {
+    if (!isLoading && !error && warningItemsCount > 0) {
+      notify({
+        type: "warning",
+        title: "Peringatan stok",
+        message: `Ada ${warningItemsCount} barang yang stoknya menipis atau habis. Segera lakukan pengecekan.`,
+      });
+    }
+  }, [isLoading, error, warningItemsCount, notify]);
+
+  useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, selectedCategory, selectedStock]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -34,135 +128,111 @@ export default function Dashboard() {
   const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scroll({ top: 0, behavior: "smooth" });
+  const isFilterActive =
+    searchQuery !== "" || selectedCategory !== "all" || selectedStock !== "all";
+
+  const handleResetFilter = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSelectedStock("all");
   };
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+    <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
+      <h1 className="dashboard-title">Daftar Barang</h1>
+      <p className="dashboard-description">
+        Pantau jumlah dan status stok barang di gudang.
+      </p>
 
-      <div className="dashboard-layout d-flex">
-        <Sidebar />
+      {error && (
+        <div className="alert alert-danger text-center shadow-sm" role="alert">
+          <p className="mb-2">{error}</p>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={refetch}
+            title="Muat ulang data"
+          >
+            Coba Lagi
+          </Button>
+        </div>
+      )}
 
-        <main className="main-content flex-grow-1">
-          <div className="container-fluid p-3">
-            {showNotification &&
-              warningItemsCount > 0 &&
-              !isLoading &&
-              !error && (
-                <div
-                  className="alert alert-warning shadow-sm d-flex align-items-center justify-content-between mb-4"
-                  role="alert"
-                  style={{ borderLeft: "5px solid #ffc107" }}
-                >
-                  <div>
-                    <span className="fs-5 me-2"></span>
-                    <strong>Perhatian!</strong> Terdapat{" "}
-                    <strong>{warningItemsCount} barang</strong> yang stoknya
-                    menipis atau habis. Segera lakukan pengecekan.
-                  </div>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowNotification(false)}
-                    aria-label="Close"
-                  ></button>
-                </div>
-              )}
-            <h1 className="dashboard-title">Daftar Barang</h1>
-            <p className="dashboard-description">
-              Pantau jumlah dan status stok barang di gudang.
-            </p>
+      {isLoading && !error && (
+        <div className="text-center py-5">
+          <div className="spinner-border text-success" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2 text-secondary">Memuat data barang...</p>
+        </div>
+      )}
 
-            {error && (
-              <div
-                className="alert alert-danger text-center shadow-sm"
-                role="alert"
+      {!isLoading && !error && (
+        <>
+          <DashboardSummary items={activeItems} />
+          <div
+            className="bg-white p-3 rounded-3 border mb-3 shadow-sm d-flex flex-column flex-md-row align-items-stretch align-items-md-end justify-content-between gap-3"
+            role="region"
+            aria-label="Filter Group Daftar Barang"
+          >
+            <div className="d-flex flex-column flex-sm-row gap-3 flex-grow-1">
+              <FilterGroup
+                id="filter-kategori"
+                label="Kategori Barang"
+                options={categoryOptions}
+                selectedValue={selectedCategory}
+                onChange={setSelectedCategory}
+              />
+
+              <FilterGroup
+                id="filter-status-stok"
+                label="Status Stok"
+                options={stockOptions}
+                selectedValue={selectedStock}
+                onChange={setSelectedStock}
+              />
+            </div>
+
+            {isFilterActive && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleResetFilter}
+                title="Kembalikan semua filter ke pengaturan awal"
               >
-                <p className="mb-2">{error}</p>
-                <button
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={refetch}
-                >
-                  Coba Lagi
-                </button>
-              </div>
-            )}
-
-            {isLoading && !error && (
-              <div className="text-center py-5">
-                <div className="spinner-border text-success" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-2 text-secondary">Memuat data barang...</p>
-              </div>
-            )}
-
-            {!isLoading && !error && (
-              <>
-                <DashboardSummary items={filteredItems} />
-                <div className="item-list">
-                  {displayedItems.map((item) => (
-                    <ItemCard key={item.barangid} item={item} />
-                  ))}
-                </div>
-
-                {filteredItems.length === 0 && (
-                  <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
-                )}
-                {totalPages > 1 && (
-                  <nav
-                    aria-label="Navigasi Halaman Dashboard"
-                    className="mt-4 mb-2 d-flex justify-content-center"
-                  >
-                    <ul className="pagination pagination-sm">
-                      <li
-                        className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                      >
-                        <button
-                          className="page-link text-success"
-                          onClick={() => handlePageChange(currentPage - 1)}
-                        >
-                          &laquo;prev
-                        </button>
-                      </li>
-
-                      {[...Array(totalPages)].map((_, index) => (
-                        <li
-                          key={index + 1}
-                          className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
-                        >
-                          <button
-                            className={`page-link ${currentPage === index + 1 ? "bg-success border-success text-white" : "text-success"}`}
-                            onClick={() => handlePageChange(index + 1)}
-                          >
-                            {index + 1}
-                          </button>
-                        </li>
-                      ))}
-
-                      <li
-                        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
-                      >
-                        <button
-                          className="page-link text-success"
-                          onClick={() => handlePageChange(currentPage + 1)}
-                        >
-                          Next &raquo;
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
-                )}
-              </>
+                Reset Filter
+              </Button>
             )}
           </div>
-        </main>
-      </div>
-      <footer className="footer-db">
-        <p className="mb-0">&copy; 2026 Gudang Pintar</p>
-      </footer>
-    </div>
+
+          <div className="item-list">
+            {displayedItems.map((item) => (
+              <ItemCard key={item.barangid} item={item} />
+            ))}
+          </div>
+
+          {filteredItems.length === 0 && (
+            <div className="text-center py-4 bg-white rounded-3 border mt-2">
+              <p className="text-secondary mb-2">Barang tidak ditemukan.</p>
+              {isFilterActive && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleResetFilter}
+                >
+                  Reset Semua Filter
+                </Button>
+              )}
+            </div>
+          )}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            ariaLabel="Navigasi Halaman Dashboard"
+          />
+        </>
+      )}
+    </MainLayout>
   );
 }
