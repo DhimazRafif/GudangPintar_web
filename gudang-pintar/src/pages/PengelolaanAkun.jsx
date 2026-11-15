@@ -1,341 +1,345 @@
-import React, { useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import React, { useState, useEffect, useRef } from "react";
+import MainLayout from "../layouts/MainLayout";
+import Pagination from "../components/common/Pagination";
 import "./pengelolaan_akun-style.css";
 
 export default function PengelolaanAkun() {
-  // State untuk data akun (dummy)
   const [accounts, setAccounts] = useState([
     { id: 1, username: "Siti Khadijah", password: "admin123", role: "Admin" },
     { id: 2, username: "Dhimaz", password: "user123", role: "Pegawai" },
+    { id: 3, username: "Budi Santoso", password: "budi123", role: "Pegawai" },
+    { id: 4, username: "Rina Melati", password: "rina123", role: "Admin" },
+    { id: 5, username: "Agus Salim", password: "agus123", role: "Pegawai" },
+    { id: 6, username: "Dewi Lestari", password: "dewi123", role: "Pegawai" },
   ]);
 
-  // State untuk pencarian
+  // --- STATE PENCARIAN & PAGINATION ---
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  // State untuk Modal Tambah/Edit
+  // --- STATE MODAL TAMBAH/EDIT ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("tambah"); // 'tambah' atau 'edit'
+  const [modalMode, setModalMode] = useState("create"); // 'create' atau 'edit'
   const [currentAccount, setCurrentAccount] = useState({
     id: null,
     username: "",
     password: "",
-    role: "Pegawai", // Default role
+    role: "Pegawai",
   });
-  const [formError, setFormError] = useState("");
 
-  // State untuk Modal Hapus
+  // --- STATE MODAL HAPUS ---
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState(null);
 
-  // --- FUNGSI PENCARIAN ---
+  // --- STATE NOTIFIKASI POP-UP (TOAST) ---
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const toastTimeoutRef = useRef(null);
+
+  // --- FUNGSI NOTIFIKASI ---
+  const showToast = (message, type = "success") => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    setToast({ show: true, message, type });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3000); // Hilang setelah 3 detik
+  };
+
+  // --- LOGIKA PENCARIAN & PAGINATION ---
   const filteredAccounts = accounts.filter(
     (acc) =>
       acc.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      acc.role.toLowerCase().includes(searchQuery.toLowerCase()),
+      acc.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // --- FUNGSI BUKA MODAL TAMBAH ---
-  const handleOpenTambah = () => {
-    setModalMode("tambah");
-    setCurrentAccount({
-      id: null,
-      username: "",
-      password: "",
-      role: "Pegawai",
-    });
-    setFormError("");
+  const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredAccounts.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Reset page ke 1 saat mencari
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  // --- HANDLER MODAL TAMBAH/EDIT ---
+  const handleOpenCreate = () => {
+    setModalMode("create");
+    setCurrentAccount({ id: null, username: "", password: "", role: "Pegawai" });
     setIsModalOpen(true);
   };
 
-  // --- FUNGSI BUKA MODAL EDIT ---
   const handleOpenEdit = (account) => {
     setModalMode("edit");
-    // Saat edit, password dikosongkan dulu agar tidak terlihat (opsional)
-    setCurrentAccount({ ...account, password: "" });
-    setFormError("");
+    setCurrentAccount({ ...account, password: "" }); // Kosongkan password saat edit
     setIsModalOpen(true);
   };
 
-  // --- FUNGSI SIMPAN (TAMBAH / EDIT) ---
   const handleSaveAccount = (e) => {
     e.preventDefault();
-    setFormError("");
 
-    // Validasi Username wajib diisi
     if (!currentAccount.username.trim()) {
-      setFormError("Username tidak boleh kosong.");
-      return;
+      return showToast("Username tidak boleh kosong.", "danger");
+    }
+    if (modalMode === "create" && !currentAccount.password.trim()) {
+      return showToast("Password tidak boleh kosong untuk akun baru.", "danger");
     }
 
-    // Validasi Password
-    // Jika mode Tambah, password wajib diisi.
-    // Jika mode Edit, password boleh kosong (artinya tidak diubah).
-    if (modalMode === "tambah" && !currentAccount.password.trim()) {
-      setFormError("Password tidak boleh kosong untuk akun baru.");
-      return;
-    }
-
-    if (modalMode === "tambah") {
-      // Logika Tambah Data
-      const newAccount = {
-        ...currentAccount,
-        id: Date.now(), // Generate ID unik sederhana
-      };
+    if (modalMode === "create") {
+      const newAccount = { ...currentAccount, id: Date.now() };
       setAccounts([...accounts, newAccount]);
+      showToast("Akun baru berhasil ditambahkan!", "success");
     } else {
-      // Logika Edit Data
       setAccounts(
         accounts.map((acc) => {
           if (acc.id === currentAccount.id) {
-            // Jika password di form kosong, gunakan password lama
             const updatedPassword = currentAccount.password.trim()
               ? currentAccount.password
               : acc.password;
-
             return { ...acc, ...currentAccount, password: updatedPassword };
           }
           return acc;
-        }),
+        })
       );
+      showToast("Data akun berhasil diperbarui!", "success");
     }
-
     setIsModalOpen(false);
   };
 
-  // --- FUNGSI BUKA MODAL HAPUS ---
+  // --- HANDLER MODAL HAPUS ---
   const handleOpenDelete = (account) => {
     setAccountToDelete(account);
     setIsDeleteModalOpen(true);
   };
 
-  // --- FUNGSI KONFIRMASI HAPUS ---
   const confirmDelete = () => {
     if (accountToDelete) {
       setAccounts(accounts.filter((acc) => acc.id !== accountToDelete.id));
+      showToast(`Akun "${accountToDelete.username}" telah dihapus.`, "success");
     }
     setIsDeleteModalOpen(false);
     setAccountToDelete(null);
   };
 
+  // --- HANDLER KEYBOARD (ESC untuk tutup modal) ---
+  const handleKeyDown = (e, closeFunc) => {
+    if (e.key === "Escape") closeFunc(false);
+  };
+
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
-      <div className="dashboard-layout d-flex">
-        <Sidebar />
-        <main className="main-content flex-grow-1 p-4">
-          <div className="container-fluid p-0">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <div>
-                <h1 className="dashboard-title mb-1">Pengelolaan Akun</h1>
-                <p className="dashboard-description mb-0">
-                  Kelola daftar akun pengguna dan hak aksesnya.
-                </p>
-              </div>
-              <button
-                className="btn btn-success fw-semibold shadow-sm px-4 py-2"
-                onClick={handleOpenTambah}
-              >
-                + Tambah Akun
-              </button>
-            </div>
-
-            <div className="mt-4">
-              {filteredAccounts.length === 0 ? (
-                <div className="alert alert-secondary text-center">
-                  Akun tidak ditemukan.
-                </div>
-              ) : (
-                filteredAccounts.map((acc) => (
-                  <div
-                    key={acc.id}
-                    className="card account-card mb-3 shadow-sm"
-                  >
-                    <div className="card-body d-flex justify-content-between align-items-center p-3">
-                      <div>
-                        <h5 className="fw-bold mb-1 text-dark">
-                          {acc.username}
-                        </h5>
-                        <span
-                          className={`role-badge ${
-                            acc.role === "Admin" ? "admin" : "user"
-                          }`}
-                        >
-                          {acc.role}
-                        </span>
-                      </div>
-                      <div className="d-flex gap-2">
-                        <button
-                          className="btn btn-outline-success btn-sm px-3 fw-semibold"
-                          onClick={() => handleOpenEdit(acc)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="btn btn-outline-danger btn-sm px-3 fw-semibold"
-                          onClick={() => handleOpenDelete(acc)}
-                        >
-                          Hapus
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </main>
+    <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
+      {/* HEADER HALAMAN */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+          <h1 className="dashboard-title mb-1">Pengelolaan Akun</h1>
+          <p className="dashboard-description mb-0">
+            Kelola daftar pengguna dan hak akses sistem.
+          </p>
+        </div>
+        <button
+          className="btn btn-success fw-semibold shadow-sm px-4 py-2 d-flex align-items-center justify-content-center gap-2"
+          onClick={handleOpenCreate}
+        >
+          <span>+</span> Tambah Akun Baru
+        </button>
       </div>
 
-      <footer className="footer-db mt-auto">
-        <p className="mb-0">&copy; 2026 Gudang Pintar</p>
-      </footer>
+      {/* DAFTAR AKUN */}
+      <div className="mt-4">
+        {currentItems.length === 0 ? (
+          <div className="alert alert-secondary text-center shadow-sm">
+            Tidak ada akun yang cocok dengan pencarian Anda.
+          </div>
+        ) : (
+          currentItems.map((acc) => (
+            <div key={acc.id} className="card account-card mb-3 shadow-sm border-0">
+              <div className="card-body d-flex flex-column flex-sm-row justify-content-between align-items-sm-center p-3 gap-3">
+                <div>
+                  <h5 className="fw-bold mb-1 text-dark">{acc.username}</h5>
+                  <span className={`role-badge ${acc.role === "Admin" ? "admin" : "user"}`}>
+                    {acc.role}
+                  </span>
+                </div>
+                <div className="d-flex gap-2 w-100 w-sm-auto justify-content-end">
+                  <button
+                    className="btn btn-outline-success btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
+                    onClick={() => handleOpenEdit(acc)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-outline-danger btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
+                    onClick={() => handleOpenDelete(acc)}
+                  >
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
 
+      {/* PAGINATION COMPONENT */}
+      {totalPages > 1 && (
+        <div className="mt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            ariaLabel="Navigasi Halaman Akun"
+          />
+        </div>
+      )}
+
+      {/* ==========================================
+          MODAL TAMBAH / EDIT AKUN
+      ========================================== */}
       {isModalOpen && (
-        <>
-          <div
-            className="modal-backdrop fade show"
-            onClick={() => setIsModalOpen(false)}
-          ></div>
-          <div className="modal fade show d-block" tabIndex="-1" role="dialog">
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content shadow-lg border-0">
-                <div className="modal-header bg-light">
-                  <h5 className="modal-title fw-bold">
-                    {modalMode === "tambah" ? "Tambah Akun Baru" : "Edit Akun"}
-                  </h5>
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          role="dialog"
+          onKeyDown={(e) => handleKeyDown(e, setIsModalOpen)}
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content shadow-lg border-0">
+              <div className="modal-header bg-light">
+                <h5 className="modal-title fw-bold">
+                  {modalMode === "create" ? "Tambah Akun Baru" : "Edit Akun"}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setIsModalOpen(false)}
+                  aria-label="Tutup"
+                ></button>
+              </div>
+              <form onSubmit={handleSaveAccount}>
+                <div className="modal-body p-4">
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Username</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Masukkan username"
+                      value={currentAccount.username}
+                      onChange={(e) =>
+                        setCurrentAccount({ ...currentAccount, username: e.target.value })
+                      }
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold d-flex justify-content-between">
+                      <span>Password</span>
+                      {modalMode === "edit" && (
+                        <small className="text-muted fw-normal">Kosongkan jika tidak diubah</small>
+                      )}
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder={modalMode === "edit" ? "••••••••" : "Masukkan password"}
+                      value={currentAccount.password}
+                      onChange={(e) =>
+                        setCurrentAccount({ ...currentAccount, password: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="form-label fw-semibold">Role</label>
+                    <select
+                      className="form-select"
+                      value={currentAccount.role}
+                      onChange={(e) =>
+                        setCurrentAccount({ ...currentAccount, role: e.target.value })
+                      }
+                    >
+                      <option value="Admin">Admin</option>
+                      <option value="Pegawai">Pegawai</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="modal-footer bg-light border-0">
                   <button
                     type="button"
-                    className="btn-close"
+                    className="btn btn-secondary fw-semibold px-4"
                     onClick={() => setIsModalOpen(false)}
-                  ></button>
+                  >
+                    Batal
+                  </button>
+                  <button type="submit" className="btn btn-success fw-semibold px-4">
+                    Simpan
+                  </button>
                 </div>
-                <form onSubmit={handleSaveAccount}>
-                  <div className="modal-body p-4">
-                    {formError && (
-                      <div className="alert alert-danger py-2">{formError}</div>
-                    )}
-
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">Username</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Masukkan username"
-                        value={currentAccount.username}
-                        onChange={(e) =>
-                          setCurrentAccount({
-                            ...currentAccount,
-                            username: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">
-                        Password{" "}
-                        {modalMode === "edit" && (
-                          <span className="text-muted fw-normal">
-                            (Kosongkan jika tidak diubah)
-                          </span>
-                        )}
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        placeholder={
-                          modalMode === "edit"
-                            ? "••••••••"
-                            : "Masukkan password"
-                        }
-                        value={currentAccount.password}
-                        onChange={(e) =>
-                          setCurrentAccount({
-                            ...currentAccount,
-                            password: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="mb-2">
-                      <label className="form-label fw-semibold">Role</label>
-                      <select
-                        className="form-select"
-                        value={currentAccount.role}
-                        onChange={(e) =>
-                          setCurrentAccount({
-                            ...currentAccount,
-                            role: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="Admin">Admin</option>
-                        <option value="Pegawai">Pegawai</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="modal-footer bg-light border-0">
-                    <button
-                      type="button"
-                      className="btn btn-danger fw-semibold px-4"
-                      onClick={() => setIsModalOpen(false)}
-                    >
-                      Batal
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn btn-success fw-semibold px-4"
-                    >
-                      Simpan
-                    </button>
-                  </div>
-                </form>
-              </div>
+              </form>
             </div>
           </div>
-        </>
+        </div>
       )}
 
+      {/* ==========================================
+          MODAL KONFIRMASI HAPUS
+      ========================================== */}
       {isDeleteModalOpen && (
-        <>
-          <div
-            className="modal-backdrop fade show"
-            onClick={() => setIsDeleteModalOpen(false)}
-          ></div>
-          <div className="modal fade show d-block" tabIndex="-1" role="dialog">
-            <div className="modal-dialog modal-dialog-centered modal-sm">
-              <div className="modal-content shadow-lg border-0 text-center">
-                <div className="modal-body p-4">
-                  <h6 className="mb-4 fw-bold">
-                    Apakah Anda yakin ingin menghapus akun <br />
-                    <span className="text-danger fs-5">
-                      "{accountToDelete?.username}"
-                    </span>
-                    ?
-                  </h6>
-                  <div className="d-flex justify-content-center gap-3">
-                    <button
-                      className="btn btn-success fw-semibold px-4"
-                      onClick={confirmDelete}
-                    >
-                      Iya
-                    </button>
-                    <button
-                      className="btn btn-danger fw-semibold px-4"
-                      onClick={() => setIsDeleteModalOpen(false)}
-                    >
-                      Batalkan
-                    </button>
-                  </div>
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          role="dialog"
+          onKeyDown={(e) => handleKeyDown(e, setIsDeleteModalOpen)}
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-sm">
+            <div className="modal-content shadow-lg border-0 text-center">
+              <div className="modal-body p-4">
+                <h6 className="mb-4 fw-bold">
+                  Apakah Anda yakin ingin menghapus akun <br />
+                  <span className="text-danger fs-5">"{accountToDelete?.username}"</span>?
+                </h6>
+                <div className="d-flex justify-content-center gap-3">
+                  <button className="btn btn-danger fw-semibold px-4" onClick={confirmDelete} autoFocus>
+                    Iya, Hapus
+                  </button>
+                  <button
+                    className="btn btn-secondary fw-semibold px-4"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    Batalkan
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </div>
+
+      {/* ==========================================
+          NOTIFIKASI POP-UP (TOAST)
+      ========================================== */}
+      {toast.show && (
+        <div
+          className="position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 1055, transition: "opacity 0.3s" }}
+        >
+          <div className={`toast show align-items-center text-white bg-${toast.type} border-0 shadow-lg`} role="alert" aria-live="assertive" aria-atomic="true">
+            <div className="d-flex">
+              <div className="toast-body fs-6 fw-semibold">
+                {toast.message}
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                onClick={() => setToast({ ...toast, show: false })}
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
+      )}
+    </MainLayout>
   );
 }
