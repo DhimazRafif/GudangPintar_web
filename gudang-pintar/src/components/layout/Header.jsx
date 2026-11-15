@@ -1,4 +1,5 @@
 import React from "react";
+import Input from "../common/Input";
 import "./Header.css";
 
 export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
@@ -7,11 +8,12 @@ export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
       <div className="logo"> Gudang Pintar</div>
       <div className="search-container">
         <form id="search-form" onSubmit={(e) => e.preventDefault()}>
-          <input
+          <Input
+            id="global-item-search"
+            label="Cari barang"
+            hideLabel
             type="search"
             placeholder="cari barang..."
-            className="form-control"
-            aria-label="Cari Barang"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

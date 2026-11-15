@@ -1,0 +1,80 @@
+.gp-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gp-field-label {
+  margin-bottom: 0.35rem;
+  color: var(--gp-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.gp-input,
+.gp-select {
+  min-height: 2.5rem;
+  border-color: var(--gp-border);
+  border-radius: var(--gp-radius-control);
+  color: var(--gp-text);
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gp-input.form-control-sm,
+.gp-select.form-select-sm {
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+
+.gp-input::placeholder {
+  color: var(--gp-text-muted);
+  opacity: 0.85;
+}
+
+.gp-input:hover:not(:disabled),
+.gp-select:hover:not(:disabled) {
+  border-color: var(--gp-primary);
+}
+
+.gp-input:focus,
+.gp-select:focus {
+  border-color: var(--gp-primary);
+  box-shadow: var(--gp-focus-ring);
+}
+
+.gp-input[aria-invalid="true"] {
+  border-color: var(--gp-danger);
+}
+
+.gp-field-hint,
+.gp-field-error {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.gp-field-hint {
+  color: var(--gp-text-muted);
+}
+
+.gp-field-error {
+  color: var(--gp-danger);
+}
+
+.gp-checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--gp-primary);
+  cursor: pointer;
+}
+
+.gp-checkbox-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.gp-checkbox:focus-visible {
+  outline: 2px solid var(--gp-primary);
+  outline-offset: 2px;
+}

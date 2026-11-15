@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import MainLayout from "../Layouts/MainLayout";
+import MainLayout from "../app-layouts/MainLayout";
 import FilterGroup from "../components/common/FilterGroup";
 import Pagination from "../components/common/Pagination";
 import Button from "../components/common/Button";
-import "./history-style.css";
+import "./History.css";
 import {
   getHistoryEntries,
   HISTORY_STORAGE_KEY,

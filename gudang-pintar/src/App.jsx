@@ -4,17 +4,20 @@ import Transaksi from "./pages/Transaksi";
 import History from "./pages/History";
 import PengelolaanAkun from "./pages/PengelolaanAkun";
 import { Navigate, Route, Routes } from "react-router-dom";
+import NotificationProvider from "./contexts/NotificationProvider";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/Dashboard" replace />} />
-      <Route path="/Dashboard" element={<Dashboard />} />
-      <Route path="/transaksi" element={<Transaksi />} />
-      <Route path="/history" element={<History />} />
-      <Route path="/akun" element={<PengelolaanAkun />} />
-      <Route path="*" element={<Navigate to="/Dashboard" replace />} />
-    </Routes>
+    <NotificationProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/Dashboard" replace />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/transaksi" element={<Transaksi />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/akun" element={<PengelolaanAkun />} />
+        <Route path="*" element={<Navigate to="/Dashboard" replace />} />
+      </Routes>
+    </NotificationProvider>
   );
 }
 export default App;

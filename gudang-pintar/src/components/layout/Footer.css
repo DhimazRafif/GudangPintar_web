@@ -1,0 +1,9 @@
+.footer-db {
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--gp-text-muted);
+  background-color: var(--gp-surface);
+  border-top: 1px solid var(--gp-border);
+  width: 100%;
+}

@@ -1,0 +1,119 @@
+.transaction-page {
+  min-width: 0;
+}
+
+.transaction-content {
+  min-width: 0;
+}
+
+.transaction-page .transaction-search {
+  width: min(100%, 420px);
+}
+
+.transaction-page .transaction-quantity-field {
+  width: 8rem;
+}
+
+.transaction-page .transaction-action-button {
+  min-height: 48px;
+  padding-inline: 1rem;
+}
+
+.transaction-page .transaction-action-button--out {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #dc3545;
+  --bs-btn-border-color: #dc3545;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #bb2d3b;
+  --bs-btn-hover-border-color: #b02a37;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #b02a37;
+  --bs-btn-active-border-color: #a52834;
+}
+
+.transaction-page .transaction-table {
+  min-width: 620px;
+}
+
+.transaction-page .transaction-modal-dialog {
+  max-width: min(1200px, calc(100% - 2rem));
+}
+
+.transaction-page .transaction-modal-dialog .modal-content {
+  max-height: calc(100vh - 2rem);
+}
+
+.transaction-page .transaction-modal-dialog .modal-header,
+.transaction-page .transaction-modal-dialog .modal-footer {
+  flex-shrink: 0;
+}
+
+.transaction-page .transaction-modal-dialog .modal-body {
+  overflow-y: auto;
+}
+
+.transaction-page .transaction-modal-dialog .modal-table {
+  min-width: 760px;
+}
+
+.transaction-page .transaction-check-column {
+  width: 50px;
+}
+
+.transaction-page .transaction-quantity-column {
+  width: 180px;
+}
+
+.transaction-page .transaction-modal-dialog .summary-table {
+  min-width: 600px;
+}
+
+.transaction-page .page-size-select {
+  width: 100px;
+}
+
+.transaction-page .transaction-pagination-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-top: 1rem;
+}
+
+.transaction-page .transaction-pagination-row > nav {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 575.98px) {
+  .transaction-page .transaction-action-button {
+    flex: 1 1 100%;
+  }
+
+  .transaction-page .transaction-modal-dialog {
+    max-width: calc(100% - 1rem);
+    margin: 0.5rem auto;
+  }
+
+  .transaction-page .transaction-modal-dialog .modal-content {
+    max-height: calc(100dvh - 1rem);
+  }
+
+  .transaction-page .transaction-modal-dialog .modal-body {
+    padding: 1rem;
+  }
+
+  .transaction-page .transaction-modal-dialog .modal-footer > .btn {
+    flex: 1 1 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transaction-page *,
+  .transaction-page *::before,
+  .transaction-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

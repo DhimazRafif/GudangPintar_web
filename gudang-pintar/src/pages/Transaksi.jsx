@@ -1,46 +1,25 @@
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import "./transaksi-style.css";
+import { useEffect, useState } from "react";
+import MainLayout from "../app-layouts/MainLayout";
+import Button from "../components/common/Button";
+import Pagination from "../components/common/Pagination";
+import Input from "../components/common/Input";
+import SelectControl from "../components/common/SelectControl";
+import CheckboxControl from "../components/common/CheckboxControl";
+import useNotification from "../hooks/useNotification";
+import useFetch from "../hooks/useFetch";
+import "./Transaksi.css";
 import { recordTransactionStockHistory } from "../services/historyService";
 
 // ID pengguna contoh untuk menggantikan user yang nantinya berasal dari autentikasi.
 const MOCK_USER_ID = 1;
 
-// Data supplier terpisah; supplierid dicatat pada stock_history untuk stok masuk.
-const initialSuppliers = [
-  { supplierid: 1, name: "PT Sumber Segar" },
-  { supplierid: 2, name: "CV Alat Tulis Jaya" },
-  { supplierid: 3, name: "PT Sumber Pangan" },
-  { supplierid: 4, name: "CV Rasa Nusantara" },
-  { supplierid: 5, name: "PT Minyak Sejahtera" },
-];
-
-// Data barang mengikuti kolom yang digunakan halaman transaksi pada tabel barang.
-const initialItems = [
-  { barangid: 1, name: "Air Mineral", price: 3000, quantity: 31, isActive: true },
-  { barangid: 2, name: "Buku Tulis", price: 5000, quantity: 15, isActive: true },
-  { barangid: 3, name: "Pulpen Hitam", price: 2500, quantity: 40, isActive: true },
-  { barangid: 4, name: "Mie", price: 3000, quantity: 12, isActive: true },
-  { barangid: 5, name: "Kecap", price: 8000, quantity: 24, isActive: true },
-  { barangid: 6, name: "Minyak Goreng", price: 18000, quantity: 24, isActive: true },
-];
-
-// Supplier contoh untuk tampilan barang; relasi transaksi masuk disimpan di stock_history.
-const supplierIdByBarangId = {
-  1: 1,
-  2: 2,
-  3: 2,
-  4: 3,
-  5: 4,
-  6: 5,
-};
-
-function getSupplierName(barangid) {
-  const supplierid = supplierIdByBarangId[barangid];
-  return initialSuppliers.find((supplier) => supplier.supplierid === supplierid)?.name ?? "Belum ditentukan";
+function getSupplierName(item) {
+  return item.supplierName ?? item.supplier ?? "Belum ditentukan";
 }
 
 export default function Transaksi() {
+  const { data: fetchedItems, isLoading, error, refetch } = useFetch("/barang.json");
+  const { notify } = useNotification();
   const [type, setType] = useState("masuk");
   const [searchQuery, setSearchQuery] = useState("");
   const [listSearchQuery, setListSearchQuery] = useState("");
@@ -49,8 +28,6 @@ export default function Transaksi() {
   const [modalPage, setModalPage] = useState(1);
   const [listPage, setListPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [feedback, setFeedback] = useState(null);
   const [nextTransactionId, setNextTransactionId] = useState(1);
   const [nextDetailId, setNextDetailId] = useState(1);
   const [nextHistoryId, setNextHistoryId] = useState(1);
@@ -58,26 +35,43 @@ export default function Transaksi() {
   const [transactions, setTransactions] = useState([]);
   const [, setTransactionDetails] = useState([]);
   const [, setStockHistory] = useState([]);
-  // Data barang aktif, termasuk stok dan pilihan sementara pada form.
-  const [items, setItems] = useState(
-    initialItems.map((item) => ({ ...item, selected: false, transactionQuantity: 0 })),
-  );
+  // Data barang dari public/barang.json beserta pilihan sementara pada formulir.
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (!fetchedItems.length) return;
+    setItems(
+      fetchedItems.map((item) => ({
+        ...item,
+        selected: false,
+        transactionQuantity: 0,
+      })),
+    );
+  }, [fetchedItems]);
+
+  useEffect(() => {
+    if (error) {
+      notify({ type: "danger", title: "Gagal memuat barang", message: error });
+    }
+  }, [error, notify]);
 
   // Pencarian pada daftar barang di dalam modal transaksi.
   const filteredItems = items.filter((item) => {
+    if (Number(item.isActive) !== 1) return false;
     const query = searchQuery.trim().toLowerCase();
     return (
       item.name.toLowerCase().includes(query) ||
-      getSupplierName(item.barangid).toLowerCase().includes(query)
+      getSupplierName(item).toLowerCase().includes(query)
     );
   });
 
   // Pencarian pada daftar barang utama.
   const filteredListItems = items.filter((item) => {
+    if (Number(item.isActive) !== 1) return false;
     const query = listSearchQuery.trim().toLowerCase();
     return (
       item.name.toLowerCase().includes(query) ||
-      getSupplierName(item.barangid).toLowerCase().includes(query)
+      getSupplierName(item).toLowerCase().includes(query)
     );
   });
 
@@ -107,7 +101,6 @@ export default function Transaksi() {
 
   // Mengubah centang atau jumlah barang sebelum transaksi disimpan.
   function updateItem(id, changes) {
-    setFormError("");
     setItems((currentItems) =>
       currentItems.map((item) =>
         item.barangid === id ? { ...item, ...changes } : item,
@@ -119,8 +112,6 @@ export default function Transaksi() {
     setType(transactionType);
     setSearchQuery("");
     setModalPage(1);
-    setFormError("");
-    setFeedback(null);
     setIsModalOpen(true);
   }
 
@@ -129,9 +120,12 @@ export default function Transaksi() {
     setItems((currentItems) =>
       currentItems.map((item) => ({ ...item, selected: false, transactionQuantity: 0 })),
     );
-    setFormError("");
     setSearchQuery("");
     setIsModalOpen(false);
+  }
+
+  function showFormError(message) {
+    notify({ type: "danger", message });
   }
 
   // CRUD (Create): Menyimpan transaksi baru ke state hardcode, sekaligus menyesuaikan stok barang yang dipilih.
@@ -139,7 +133,7 @@ export default function Transaksi() {
     const selectedItems = items.filter((item) => item.selected);
 
     if (selectedItems.length === 0) {
-      setFormError("Pilih setidaknya satu barang untuk transaksi.");
+      showFormError("Pilih setidaknya satu barang untuk transaksi.");
       return;
     }
 
@@ -147,7 +141,7 @@ export default function Transaksi() {
       (item) => !Number.isInteger(item.transactionQuantity) || item.transactionQuantity <= 0,
     );
     if (invalidQuantityItem) {
-      setFormError(`Masukkan jumlah lebih dari 0 untuk ${invalidQuantityItem.name}.`);
+      showFormError(`Masukkan jumlah lebih dari 0 untuk ${invalidQuantityItem.name}.`);
       return;
     }
 
@@ -157,7 +151,7 @@ export default function Transaksi() {
         (item) => item.transactionQuantity > item.quantity,
       );
       if (insufficientStockItem) {
-        setFormError(
+        showFormError(
           `Stok ${insufficientStockItem.name} hanya ${insufficientStockItem.quantity}; jumlah keluar terlalu banyak.`,
         );
         return;
@@ -188,7 +182,7 @@ export default function Transaksi() {
       barangid: detail.barangid,
       changed_quantity: type === "masuk" ? detail.quantity : -detail.quantity,
       changed_by: MOCK_USER_ID,
-      supplierid: type === "masuk" ? supplierIdByBarangId[detail.barangid] : null,
+      supplierid: null,
       change_date: createdAt,
     }));
 
@@ -217,41 +211,39 @@ export default function Transaksi() {
         };
       }),
     );
-    setFeedback({
+    notify({
       type: "success",
+      title: "Transaksi berhasil",
       message: `Transaksi #${transaction.transaksiid} berhasil disimpan. Total ${transaction.total_quantity} barang, senilai Rp${transaction.total_price.toLocaleString("id-ID")}. ${transactions.length + 1} transaksi dibuat pada sesi ini.`,
     });
-    setFormError("");
     setIsModalOpen(false);
   }
 
   return (
-    <div className="transaction-page d-flex flex-column min-vh-100">
-      <header className="header-db">
-        <div className="logo">Gudang Pintar</div>
-        <div className="search-container">
-          <form onSubmit={(event) => event.preventDefault()}>
-            <input
-              type="search"
-              placeholder="Cari..."
-              className="form-control"
-              aria-label="Cari"
-            />
-          </form>
-        </div>
-        <div className="header-right" />
-      </header>
-
-      <div className="d-flex flex-grow-1 transaction-layout">
-        <Sidebar />
-
-        <main className="flex-grow-1 p-4">
+    <MainLayout
+      searchQuery={listSearchQuery}
+      setSearchQuery={(query) => {
+        setListSearchQuery(query);
+        setListPage(1);
+      }}
+    >
+      <div className="transaction-page">
+        <main className="transaction-content">
           <div className="container-fluid p-0">
             <h2 className="mb-4 fw-bold">Menu Transaksi</h2>
 
-            {feedback && (
-              <div className={`alert alert-${feedback.type}`} role="status">
-                {feedback.message}
+            {isLoading && (
+              <div className="alert alert-info" role="status" aria-live="polite">
+                Memuat data barang...
+              </div>
+            )}
+
+            {error && (
+              <div className="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+                <span>{error}</span>
+                <Button variant="secondary" size="sm" onClick={refetch}>
+                  Coba lagi
+                </Button>
               </div>
             )}
 
@@ -259,86 +251,29 @@ export default function Transaksi() {
               <h4 className="card-title mb-3">Pilih Jenis Transaksi</h4>
               <p className="text-secondary">Pilih transaksi untuk membuka formulir.</p>
               <div className="d-flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  className="btn transaction-action-button transaction-action-button--in"
+                <Button
+                  className="transaction-action-button transaction-action-button--in"
+                  disabled={isLoading || Boolean(error)}
                   onClick={() => openTransactionModal("masuk")}
                 >
                   Transaksi Stok Masuk
-                </button>
-                <button
-                  type="button"
-                  className="btn transaction-action-button transaction-action-button--out"
+                </Button>
+                <Button
+                  variant="danger"
+                  className="transaction-action-button transaction-action-button--out"
+                  disabled={isLoading || Boolean(error)}
                   onClick={() => openTransactionModal("keluar")}
                 >
                   Transaksi Stok Keluar
-                </button>
+                </Button>
               </div>
             </section>
 
             {/* CRUD (Read): daftar barang dan stok yang tersedia untuk transaksi. */}
             <section className="card shadow-sm border-0 p-4 mt-4">
               <h4 className="card-title mb-3">Daftar Barang</h4>
-              <div className="mb-3" style={{ maxWidth: 420 }}>
-                <label htmlFor="list-item-search" className="form-label fw-semibold">
-                  Cari Barang atau Supplier
-              </label>
-                <input
-                  id="list-item-search"
-                  type="search"
-                  className="form-control"
-                  placeholder="Masukkan nama barang atau supplier..."
-                  value={listSearchQuery}
-                  onChange={(event) => {
-                    setListSearchQuery(event.target.value);
-                    setListPage(1);
-                  }}
-                />
-              </div>
-              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                <label className="d-flex align-items-center gap-2">
-                  Tampilkan
-                  <select
-                    className="form-select form-select-sm"
-                    style={{ width: 100 }}
-                    value={listPageSize}
-                    onChange={(event) => {
-                      setListPageSize(event.target.value);
-                      setListPage(1);
-                    }}
-                    aria-label="Jumlah barang yang ditampilkan"
-                  >
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="all">Semua</option>
-                  </select>
-                  barang
-                </label>
-                <div className="d-flex align-items-center gap-2">
-                  <span className="text-secondary small">
-                    Halaman {listPage} dari {listPageCount}
-                  </span>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary btn-sm"
-                    disabled={listPage <= 1 || listPageSize === "all"}
-                    onClick={() => setListPage((page) => page - 1)}
-                  >
-                    Sebelumnya
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary btn-sm"
-                    disabled={listPage >= listPageCount || listPageSize === "all"}
-                    onClick={() => setListPage((page) => page + 1)}
-                  >
-                    Berikutnya
-                  </button>
-                </div>
-              </div>
               <div className="table-responsive border rounded p-2 bg-light">
-                <table className="table table-hover align-middle mb-0">
+                <table className="table table-hover align-middle mb-0 transaction-table">
                   <thead className="table-light">
                     <tr>
                       <th scope="col">Nama Barang</th>
@@ -348,33 +283,75 @@ export default function Transaksi() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleListItems.map((item) => (
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan="4" className="text-center text-secondary py-3">
+                          Memuat barang...
+                        </td>
+                      </tr>
+                    ) : error ? (
+                      <tr>
+                        <td colSpan="4" className="text-center text-secondary py-3">
+                          Data barang belum dapat ditampilkan.
+                        </td>
+                      </tr>
+                    ) : visibleListItems.map((item) => (
                       <tr key={item.barangid}>
                         <td>{item.name}</td>
-                        <td>{getSupplierName(item.barangid)}</td>
+                        <td>{getSupplierName(item)}</td>
                         <td>Rp{item.price.toLocaleString("id-ID")}</td>
                         <td>{item.quantity}</td>
                       </tr>
                     ))}
-                    {filteredListItems.length === 0 && (
+                    {!isLoading && !error && filteredListItems.length === 0 && (
                       <tr>
                         <td colSpan="4" className="text-center text-secondary py-3">
-                          Barang atau supplier tidak ditemukan.
+                          {items.length === 0
+                            ? "Belum ada data barang."
+                            : "Barang atau supplier tidak ditemukan."}
                         </td>
                       </tr>
                     )}
                   </tbody>
                 </table>
               </div>
+              <div className="transaction-pagination-row">
+                <div className="d-flex align-items-center gap-2">
+                  <span>Tampilkan</span>
+                  <SelectControl
+                    id="transaction-list-page-size"
+                    className="transaction-page-size-control"
+                    selectClassName="form-select-sm page-size-select"
+                    options={[
+                      { value: "5", label: "5" },
+                      { value: "10", label: "10" },
+                      { value: "20", label: "20" },
+                      { value: "all", label: "Semua" },
+                    ]}
+                    value={listPageSize}
+                    onChange={(value) => {
+                      setListPageSize(value);
+                      setListPage(1);
+                    }}
+                    aria-label="Jumlah barang yang ditampilkan"
+                  />
+                  <span>barang</span>
+                </div>
+                <Pagination
+                  currentPage={listPage}
+                  totalPages={listPageCount}
+                  onPageChange={setListPage}
+                  ariaLabel="Halaman daftar barang transaksi"
+                />
+              </div>
             </section>
 
           </div>
         </main>
-      </div>
 
       {isModalOpen && (
         <>
-          <div className="modal-backdrop fade show" onClick={() => setIsModalOpen(false)} />
+          <div className="modal-backdrop fade show" onClick={cancelTransaction} />
           <div
             className="modal fade show d-block"
             role="dialog"
@@ -392,110 +369,58 @@ export default function Transaksi() {
                     type="button"
                     className="btn-close"
                     aria-label="Tutup"
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={cancelTransaction}
                   />
                 </div>
                 <div className="modal-body">
-                  {formError && (
-                    <div className="alert alert-danger" role="alert">
-                      {formError}
-                    </div>
-                  )}
-                  <div className="mb-3" style={{ maxWidth: 420 }}>
-                    <label htmlFor="item-search" className="form-label fw-semibold">
-                      Cari Barang atau Supplier
-                    </label>
-                    <input
-                      id="item-search"
-                      type="search"
-                      className="form-control"
-                      placeholder="Masukkan nama barang atau supplier..."
-                      value={searchQuery}
-                      onChange={(event) => {
-                        setSearchQuery(event.target.value);
-                        setModalPage(1);
-                      }}
-                    />
-                  </div>
-
-                  <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                    <label className="d-flex align-items-center gap-2">
-                      Tampilkan
-                      <select
-                        className="form-select form-select-sm"
-                        style={{ width: 100 }}
-                        value={modalPageSize}
-                        onChange={(event) => {
-                          setModalPageSize(event.target.value);
-                          setModalPage(1);
-                        }}
-                        aria-label="Jumlah barang yang ditampilkan di formulir transaksi"
-                      >
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="all">Semua</option>
-                      </select>
-                      barang
-                    </label>
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="text-secondary small">
-                        Halaman {modalPage} dari {modalPageCount}
-                      </span>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        disabled={modalPage <= 1 || modalPageSize === "all"}
-                        onClick={() => setModalPage((page) => page - 1)}
-                      >
-                        Sebelumnya
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        disabled={modalPage >= modalPageCount || modalPageSize === "all"}
-                        onClick={() => setModalPage((page) => page + 1)}
-                      >
-                        Berikutnya
-                      </button>
-                    </div>
-                  </div>
+                  <Input
+                    id="item-search"
+                    label="Cari Barang atau Supplier"
+                    type="search"
+                    className="transaction-search mb-3"
+                    placeholder="Masukkan nama barang atau supplier..."
+                    value={searchQuery}
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value);
+                      setModalPage(1);
+                    }}
+                  />
 
                   <label className="form-label fw-semibold mb-2">
                     Pilih Barang &amp; Ubah Kuantitas:
                   </label>
                   <div className="table-responsive border rounded p-2 bg-light">
-                    <table className="table table-hover align-middle mb-0">
+                    <table className="table table-hover align-middle mb-0 transaction-table modal-table">
                       <thead className="table-light">
                         <tr>
-                          <th scope="col" style={{ width: 50 }} className="text-center">Check</th>
+                          <th scope="col" className="text-center transaction-check-column">Pilih</th>
                           <th scope="col">Nama Barang</th>
                           <th scope="col">Supplier</th>
                           <th scope="col">Harga</th>
                           <th scope="col">Stok Saat Ini</th>
-                          <th scope="col" style={{ width: 180 }}>Jumlah Barang</th>
+                          <th scope="col" className="transaction-quantity-column">Jumlah Barang</th>
                         </tr>
                       </thead>
                       <tbody>
                         {visibleModalItems.map((item) => (
                       <tr key={item.barangid}>
                         <td className="text-center">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
+                          <CheckboxControl
                             id={`item-${item.barangid}`}
                             checked={item.selected}
                             onChange={(event) => updateItem(item.barangid, { selected: event.target.checked })}
                           />
                         </td>
                         <td><label htmlFor={`item-${item.barangid}`} className="user-select-none">{item.name}</label></td>
-                        <td>{getSupplierName(item.barangid)}</td>
+                        <td>{getSupplierName(item)}</td>
                         <td>Rp{item.price.toLocaleString("id-ID")}</td>
                         <td>{item.quantity}</td>
                         <td>
-                          <input
+                          <Input
+                            id={`item-quantity-${item.barangid}`}
                             type="number"
-                            className="form-control form-control-sm"
+                            className="transaction-quantity-field"
+                            inputClassName="form-control-sm"
                             min="0"
                             value={item.transactionQuantity}
                             aria-label={`Jumlah ${item.name}`}
@@ -514,6 +439,35 @@ export default function Transaksi() {
                   </tbody>
                 </table>
               </div>
+              <div className="transaction-pagination-row">
+                <div className="d-flex align-items-center gap-2">
+                  <span>Tampilkan</span>
+                  <SelectControl
+                    id="transaction-modal-page-size"
+                    className="transaction-page-size-control"
+                    selectClassName="form-select-sm page-size-select"
+                    options={[
+                      { value: "5", label: "5" },
+                      { value: "10", label: "10" },
+                      { value: "20", label: "20" },
+                      { value: "all", label: "Semua" },
+                    ]}
+                    value={modalPageSize}
+                    onChange={(value) => {
+                      setModalPageSize(value);
+                      setModalPage(1);
+                    }}
+                    aria-label="Jumlah barang yang ditampilkan di formulir transaksi"
+                  />
+                  <span>barang</span>
+                </div>
+                <Pagination
+                  currentPage={modalPage}
+                  totalPages={modalPageCount}
+                  onPageChange={setModalPage}
+                  ariaLabel="Halaman pilihan barang transaksi"
+                />
+              </div>
 
                   {/* Ringkasan ini berubah langsung saat pilihan atau kuantitas diedit. */}
                   {selectedItemsForSummary.length > 0 && (
@@ -522,7 +476,7 @@ export default function Transaksi() {
                         Ringkasan Transaksi
                       </h3>
                       <div className="table-responsive">
-                        <table className="table table-sm align-middle mb-0">
+                        <table className="table table-sm align-middle mb-0 summary-table">
                           <thead>
                             <tr>
                               <th scope="col">Barang</th>
@@ -536,7 +490,7 @@ export default function Transaksi() {
                             {selectedItemsForSummary.map((item) => (
                               <tr key={item.barangid}>
                                 <td>{item.name}</td>
-                                <td>{getSupplierName(item.barangid)}</td>
+                                <td>{getSupplierName(item)}</td>
                                 <td>{item.transactionQuantity}</td>
                                 <td>Rp{item.price.toLocaleString("id-ID")}</td>
                                 <td>Rp{(item.transactionQuantity * item.price).toLocaleString("id-ID")}</td>
@@ -553,26 +507,25 @@ export default function Transaksi() {
                   )}
                 </div>
                 <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
+                  <Button
+                    variant="secondary"
                     onClick={cancelTransaction}
                   >
                     Batal
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
+                  </Button>
+                  <Button
+                    variant="primary"
                     onClick={saveTransaction}
                   >
                   Simpan Transaksi
-                </button>
+                  </Button>
               </div>
               </div>
             </div>
           </div>
         </>
       )}
-    </div>
+      </div>
+    </MainLayout>
   );
 }

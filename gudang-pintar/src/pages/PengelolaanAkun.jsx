@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import MainLayout from "../layouts/MainLayout";
+import React, { useState, useEffect } from "react";
+import MainLayout from "../app-layouts/MainLayout";
 import Pagination from "../components/common/Pagination";
-import "./pengelolaan_akun-style.css";
+import Input from "../components/common/Input";
+import SelectControl from "../components/common/SelectControl";
+import useNotification from "../hooks/useNotification";
+import "./PengelolaanAkun.css";
 
 export default function PengelolaanAkun() {
+  const { notify } = useNotification();
   const [accounts, setAccounts] = useState([
     { id: 1, username: "Siti Khadijah", password: "admin123", role: "Admin" },
     { id: 2, username: "Dhimaz", password: "user123", role: "Pegawai" },
@@ -32,17 +36,9 @@ export default function PengelolaanAkun() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState(null);
 
-  // --- STATE NOTIFIKASI POP-UP (TOAST) ---
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
-  const toastTimeoutRef = useRef(null);
-
   // --- FUNGSI NOTIFIKASI ---
   const showToast = (message, type = "success") => {
-    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
-    setToast({ show: true, message, type });
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast((prev) => ({ ...prev, show: false }));
-    }, 3000); // Hilang setelah 3 detik
+    notify({ type, message });
   };
 
   // --- LOGIKA PENCARIAN & PAGINATION ---
@@ -219,10 +215,10 @@ export default function PengelolaanAkun() {
               <form onSubmit={handleSaveAccount}>
                 <div className="modal-body p-4">
                   <div className="mb-3">
-                    <label className="form-label fw-semibold">Username</label>
-                    <input
+                    <Input
+                      id="account-username"
+                      label="Username"
                       type="text"
-                      className="form-control"
                       placeholder="Masukkan username"
                       value={currentAccount.username}
                       onChange={(e) =>
@@ -233,15 +229,11 @@ export default function PengelolaanAkun() {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label fw-semibold d-flex justify-content-between">
-                      <span>Password</span>
-                      {modalMode === "edit" && (
-                        <small className="text-muted fw-normal">Kosongkan jika tidak diubah</small>
-                      )}
-                    </label>
-                    <input
+                    <Input
+                      id="account-password"
+                      label="Password"
+                      hint={modalMode === "edit" ? "Kosongkan jika tidak diubah" : undefined}
                       type="password"
-                      className="form-control"
                       placeholder={modalMode === "edit" ? "••••••••" : "Masukkan password"}
                       value={currentAccount.password}
                       onChange={(e) =>
@@ -251,17 +243,18 @@ export default function PengelolaanAkun() {
                   </div>
 
                   <div className="mb-2">
-                    <label className="form-label fw-semibold">Role</label>
-                    <select
-                      className="form-select"
+                    <SelectControl
+                      id="account-role"
+                      label="Role"
+                      options={[
+                        { value: "Admin", label: "Admin" },
+                        { value: "Pegawai", label: "Pegawai" },
+                      ]}
                       value={currentAccount.role}
-                      onChange={(e) =>
-                        setCurrentAccount({ ...currentAccount, role: e.target.value })
+                      onChange={(value) =>
+                        setCurrentAccount({ ...currentAccount, role: value })
                       }
-                    >
-                      <option value="Admin">Admin</option>
-                      <option value="Pegawai">Pegawai</option>
-                    </select>
+                    />
                   </div>
                 </div>
                 <div className="modal-footer bg-light border-0">
@@ -317,29 +310,6 @@ export default function PengelolaanAkun() {
         </div>
       )}
 
-      {/* ==========================================
-          NOTIFIKASI POP-UP (TOAST)
-      ========================================== */}
-      {toast.show && (
-        <div
-          className="position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 1055, transition: "opacity 0.3s" }}
-        >
-          <div className={`toast show align-items-center text-white bg-${toast.type} border-0 shadow-lg`} role="alert" aria-live="assertive" aria-atomic="true">
-            <div className="d-flex">
-              <div className="toast-body fs-6 fw-semibold">
-                {toast.message}
-              </div>
-              <button
-                type="button"
-                className="btn-close btn-close-white me-2 m-auto"
-                onClick={() => setToast({ ...toast, show: false })}
-                aria-label="Close"
-              ></button>
-            </div>
-          </div>
-        </div>
-      )}
     </MainLayout>
   );
 }
