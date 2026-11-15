@@ -1,5 +1,9 @@
-.history-main {
+.history-page {
   min-width: 0;
+}
+
+.history-filter .filter-dropdown-group {
+  max-width: 100%;
 }
 
 .history-list {
