@@ -4,23 +4,31 @@ import Pagination from "../components/common/Pagination";
 import Input from "../components/common/Input";
 import SelectControl from "../components/common/SelectControl";
 import useNotification from "../hooks/useNotification";
+import {
+  getPendingAccounts,
+  getStoredAccounts,
+  savePendingAccounts,
+  saveStoredAccounts,
+} from "../services/accountService";
 import "./PengelolaanAkun.css";
 
 export default function PengelolaanAkun() {
   const { notify } = useNotification();
-  const [accounts, setAccounts] = useState([
-    { id: 1, username: "Siti Khadijah", password: "admin123", role: "Admin" },
-    { id: 2, username: "Dhimaz", password: "user123", role: "Pegawai" },
-    { id: 3, username: "Budi Santoso", password: "budi123", role: "Pegawai" },
-    { id: 4, username: "Rina Melati", password: "rina123", role: "Admin" },
-    { id: 5, username: "Agus Salim", password: "agus123", role: "Pegawai" },
-    { id: 6, username: "Dewi Lestari", password: "dewi123", role: "Pegawai" },
-  ]);
+  const [accounts, setAccounts] = useState(getStoredAccounts);
+  const [pendingAccounts, setPendingAccounts] = useState(getPendingAccounts);
+
+  useEffect(() => {
+    saveStoredAccounts(accounts);
+  }, [accounts]);
+
+  useEffect(() => {
+    savePendingAccounts(pendingAccounts);
+  }, [pendingAccounts]);
 
   // --- STATE PENCARIAN & PAGINATION ---
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // --- STATE MODAL TAMBAH/EDIT ---
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -117,6 +125,20 @@ export default function PengelolaanAkun() {
     setAccountToDelete(null);
   };
 
+  const handleApprovePending = (pending) => {
+    setAccounts((current) => [
+      ...current,
+      { id: Date.now(), username: pending.username, password: pending.password, role: pending.role || "Pegawai" },
+    ]);
+    setPendingAccounts((current) => current.filter((item) => item.id !== pending.id));
+    showToast(`Akun "${pending.username}" disetujui dan sekarang aktif.`, "success");
+  };
+
+  const handleRejectPending = (pending) => {
+    setPendingAccounts((current) => current.filter((item) => item.id !== pending.id));
+    showToast(`Pendaftaran "${pending.username}" ditolak.`, "danger");
+  };
+
   // --- HANDLER KEYBOARD (ESC untuk tutup modal) ---
   const handleKeyDown = (e, closeFunc) => {
     if (e.key === "Escape") closeFunc(false);
@@ -140,6 +162,47 @@ export default function PengelolaanAkun() {
         </button>
       </div>
 
+      <section className="mb-4">
+        <div className="d-flex align-items-center gap-2 mb-3">
+          <h2 className="h5 fw-bold mb-0">Permintaan Pendaftaran</h2>
+          <span className={`badge ${pendingAccounts.length > 0 ? "text-bg-warning" : "text-bg-secondary"}`}>
+            {pendingAccounts.length}
+          </span>
+        </div>
+        {pendingAccounts.length === 0 ? (
+          <div className="card account-card shadow-sm border-0">
+            <div className="card-body p-3 text-secondary">
+              Belum ada permintaan pendaftaran akun baru.
+            </div>
+          </div>
+        ) : (
+          pendingAccounts.map((pending) => (
+            <div key={pending.id} className="card account-card mb-2 shadow-sm border-0">
+              <div className="card-body account-card-body p-3">
+                <div className="account-info">
+                  <h5 className="fw-bold mb-1 text-dark account-username">{pending.username}</h5>
+                  <span className="role-badge user">{pending.role || "Pegawai"}</span>
+                </div>
+                <div className="account-actions">
+                  <button
+                    className="btn btn-success btn-sm px-3 fw-semibold"
+                    onClick={() => handleApprovePending(pending)}
+                  >
+                    Terima
+                  </button>
+                  <button
+                    className="btn btn-outline-danger btn-sm px-3 fw-semibold"
+                    onClick={() => handleRejectPending(pending)}
+                  >
+                    Tolak
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </section>
+
       {/* DAFTAR AKUN */}
       <div className="mt-4">
         {currentItems.length === 0 ? (
@@ -149,22 +212,22 @@ export default function PengelolaanAkun() {
         ) : (
           currentItems.map((acc) => (
             <div key={acc.id} className="card account-card mb-3 shadow-sm border-0">
-              <div className="card-body d-flex flex-column flex-sm-row justify-content-between align-items-sm-center p-3 gap-3">
-                <div>
-                  <h5 className="fw-bold mb-1 text-dark">{acc.username}</h5>
+              <div className="card-body account-card-body p-3">
+                <div className="account-info">
+                  <h5 className="fw-bold mb-1 text-dark account-username">{acc.username}</h5>
                   <span className={`role-badge ${acc.role === "Admin" ? "admin" : "user"}`}>
                     {acc.role}
                   </span>
                 </div>
-                <div className="d-flex gap-2 w-100 w-sm-auto justify-content-end">
+                <div className="account-actions">
                   <button
-                    className="btn btn-outline-success btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
+                    className="btn btn-outline-success btn-sm px-3 fw-semibold"
                     onClick={() => handleOpenEdit(acc)}
                   >
                     Edit
                   </button>
                   <button
-                    className="btn btn-outline-danger btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
+                    className="btn btn-outline-danger btn-sm px-3 fw-semibold"
                     onClick={() => handleOpenDelete(acc)}
                   >
                     Hapus
@@ -176,17 +239,12 @@ export default function PengelolaanAkun() {
         )}
       </div>
 
-      {/* PAGINATION COMPONENT */}
-      {totalPages > 1 && (
-        <div className="mt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            ariaLabel="Navigasi Halaman Akun"
-          />
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        ariaLabel="Navigasi Halaman Akun"
+      />
 
       {/* ==========================================
           MODAL TAMBAH / EDIT AKUN

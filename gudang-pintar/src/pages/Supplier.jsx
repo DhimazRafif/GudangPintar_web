@@ -1,5 +1,8 @@
-import { useMemo, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import { useEffect, useMemo, useState } from "react";
+import MainLayout from "../app-layouts/MainLayout";
+import Input from "../components/common/Input";
+import Pagination from "../components/common/Pagination";
+import useNotification from "../hooks/useNotification";
 import "./supplier-style.css";
 
 const initialSuppliers = [
@@ -12,17 +15,46 @@ const initialSuppliers = [
 
 const emptyForm = { name: "" };
 
+function loadSuppliers() {
+  try {
+    const raw = localStorage.getItem("gp-suppliers");
+    if (!raw) return initialSuppliers;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : initialSuppliers;
+  } catch {
+    return initialSuppliers;
+  }
+}
+
 export default function Supplier() {
-  const [suppliers, setSuppliers] = useState(initialSuppliers);
+  const { notify } = useNotification();
+  const [suppliers, setSuppliers] = useState(loadSuppliers);
   const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
-  const [feedback, setFeedback] = useState("");
+  const [supplierToDelete, setSupplierToDelete] = useState(null);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("gp-suppliers", JSON.stringify(suppliers));
+    } catch {
+      return;
+    }
+  }, [suppliers]);
 
   const filteredSuppliers = useMemo(() => {
     const keyword = query.trim().toLowerCase();
     return suppliers.filter((supplier) => supplier.name.toLowerCase().includes(keyword));
   }, [query, suppliers]);
+
+  const totalPages = Math.ceil(filteredSuppliers.length / itemsPerPage);
+  const activePage = Math.min(currentPage, Math.max(1, totalPages));
+  const displayedSuppliers = filteredSuppliers.slice(
+    (activePage - 1) * itemsPerPage,
+    activePage * itemsPerPage,
+  );
 
   function resetForm() {
     setForm(emptyForm);
@@ -31,17 +63,23 @@ export default function Supplier() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const cleanForm = { name: form.name.trim() };
+    const cleanName = form.name.trim();
+    if (!cleanName) {
+      notify({ type: "danger", message: "Nama supplier tidak boleh kosong." });
+      return;
+    }
 
     if (editingId === null) {
       const nextId = Math.max(0, ...suppliers.map((supplier) => supplier.supplierid)) + 1;
-      setSuppliers((current) => [...current, { supplierid: nextId, ...cleanForm }]);
-      setFeedback("Pemasok berhasil ditambahkan.");
+      setSuppliers((current) => [...current, { supplierid: nextId, name: cleanName }]);
+      notify({ type: "success", message: "Supplier berhasil ditambahkan." });
     } else {
-      setSuppliers((current) => current.map((supplier) =>
-        supplier.supplierid === editingId ? { ...supplier, ...cleanForm } : supplier,
-      ));
-      setFeedback("Data pemasok berhasil diperbarui.");
+      setSuppliers((current) =>
+        current.map((supplier) =>
+          supplier.supplierid === editingId ? { ...supplier, name: cleanName } : supplier,
+        ),
+      );
+      notify({ type: "success", message: "Data supplier berhasil diperbarui." });
     }
     resetForm();
   }
@@ -49,82 +87,165 @@ export default function Supplier() {
   function editSupplier(supplier) {
     setEditingId(supplier.supplierid);
     setForm({ name: supplier.name });
-    setFeedback("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function deleteSupplier(supplier) {
-    if (!window.confirm(`Yakin ingin menghapus pemasok ${supplier.name}?`)) return;
-    setSuppliers((current) => current.filter((item) => item.supplierid !== supplier.supplierid));
-    if (editingId === supplier.supplierid) resetForm();
-    setFeedback("Pemasok berhasil dihapus.");
+    setSupplierToDelete(supplier);
+  }
+
+  function confirmDeleteSupplier() {
+    if (!supplierToDelete) return;
+    setSuppliers((current) =>
+      current.filter((item) => item.supplierid !== supplierToDelete.supplierid),
+    );
+    if (editingId === supplierToDelete.supplierid) resetForm();
+    notify({
+      type: "success",
+      message: `Supplier "${supplierToDelete.name}" berhasil dihapus.`,
+    });
+    setSupplierToDelete(null);
   }
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <header className="header-db">
-        <div className="logo">Gudang Pintar</div>
-        <div className="search-container">
-          <input className="form-control" type="search" placeholder="Cari pemasok..." aria-label="Cari pemasok" value={query} onChange={(event) => setQuery(event.target.value)} />
+    <MainLayout searchQuery={query} setSearchQuery={setQuery}>
+      <div className="supplier-page">
+        <div className="mb-4">
+          <h1 className="dashboard-title mb-1">Kelola Supplier</h1>
+          <p className="dashboard-description mb-0">Atur daftar supplier barang di toko.</p>
         </div>
-        <div className="header-right" />
-      </header>
 
-      <div className="dashboard-layout d-flex">
-        <Sidebar />
-        <main className="main-content flex-grow-1">
-          <div className="container-fluid p-3 p-md-4 supplier-page">
-            <h1 className="dashboard-title">Kelola Pemasok</h1>
-            <p className="dashboard-description">Atur daftar pemasok barang di toko.</p>
-
-            {feedback && <div className="alert alert-success" role="status">{feedback}</div>}
-
-            <section className="card border-0 shadow-sm mb-4">
-              <div className="card-body p-3 p-md-4">
-                <h2 className="h5 fw-bold mb-3">{editingId === null ? "Tambah Pemasok" : "Ubah Data Pemasok"}</h2>
-                <form className="supplier-form" onSubmit={handleSubmit}>
-                  <div className="supplier-name-field">
-                    <label className="form-label" htmlFor="supplier-name">Nama pemasok</label>
-                    <input id="supplier-name" className="form-control" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required />
-                  </div>
-                  <div className="supplier-form-actions">
-                    <button className="btn btn-success fw-semibold" type="submit">{editingId === null ? "Tambah Pemasok" : "Simpan Perubahan"}</button>
-                    {editingId !== null && <button className="btn btn-outline-secondary" type="button" onClick={resetForm}>Batal</button>}
-                  </div>
-                </form>
+        <section className="card border-0 shadow-sm mb-4">
+          <div className="card-body p-3 p-md-4">
+            <h2 className="h5 fw-bold mb-3">
+              {editingId === null ? "Tambah Supplier" : "Ubah Data Supplier"}
+            </h2>
+            <form className="supplier-form" onSubmit={handleSubmit}>
+              <div className="supplier-name-field">
+                <Input
+                  id="supplier-name"
+                  label="Nama supplier"
+                  type="text"
+                  placeholder="Masukkan nama supplier"
+                  value={form.name}
+                  onChange={(event) => setForm({ ...form, name: event.target.value })}
+                  required
+                />
               </div>
-            </section>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h2 className="h5 fw-bold mb-0">Daftar Pemasok</h2>
-              <span className="badge text-bg-success">{filteredSuppliers.length} pemasok</span>
-            </div>
-
-            {filteredSuppliers.length === 0 ? (
-              <div className="card border-0 shadow-sm"><div className="card-body text-center text-secondary py-5">Pemasok tidak ditemukan.</div></div>
-            ) : (
-              <div className="supplier-grid">
-                {filteredSuppliers.map((supplier) => (
-                  <article className="card supplier-card border-0 shadow-sm" key={supplier.supplierid}>
-                    <div className="card-body">
-                      <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
-                        <div><span className="supplier-id">PEM-{String(supplier.supplierid).padStart(3, "0")}</span><h3 className="h6 fw-bold mt-2 mb-0">{supplier.name}</h3></div>
-                        <span className="supplier-mark" aria-hidden="true">P</span>
-                      </div>
-                      <div className="d-flex gap-2 border-top pt-3">
-                        <button className="btn btn-outline-success btn-sm flex-grow-1" type="button" onClick={() => editSupplier(supplier)}>Ubah</button>
-                        <button className="btn btn-outline-danger btn-sm flex-grow-1" type="button" onClick={() => deleteSupplier(supplier)}>Hapus</button>
-                      </div>
-                    </div>
-                  </article>
-                ))}
+              <div className="supplier-form-actions">
+                <button className="btn btn-success fw-semibold px-4" type="submit">
+                  {editingId === null ? "Tambah Supplier" : "Simpan Perubahan"}
+                </button>
+                {editingId !== null && (
+                  <button
+                    className="btn btn-outline-secondary fw-semibold"
+                    type="button"
+                    onClick={resetForm}
+                  >
+                    Batal
+                  </button>
+                )}
               </div>
-            )}
-            <p className="supplier-demo-note mt-4 mb-0">Perubahan di halaman ini hanya tersimpan sementara. Data kembali seperti semula setelah halaman dimuat ulang.</p>
+            </form>
           </div>
-        </main>
+        </section>
+
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2 className="h5 fw-bold mb-0">Daftar Supplier</h2>
+          <span className="badge text-bg-success">{filteredSuppliers.length} supplier</span>
+        </div>
+
+        {filteredSuppliers.length === 0 ? (
+          <div className="card border-0 shadow-sm">
+            <div className="card-body text-center text-secondary py-5">
+              Supplier tidak ditemukan.
+            </div>
+          </div>
+        ) : (
+          <div className="supplier-grid">
+            {displayedSuppliers.map((supplier) => (
+              <article className="card supplier-card border-0 shadow-sm" key={supplier.supplierid}>
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                      <span className="supplier-id">
+                        SUP-{String(supplier.supplierid).padStart(3, "0")}
+                      </span>
+                      <h3 className="h6 fw-bold mt-2 mb-0 text-dark">{supplier.name}</h3>
+                    </div>
+                    <span className="supplier-mark" aria-hidden="true">
+                      S
+                    </span>
+                  </div>
+                  <div className="d-flex gap-2 border-top pt-3">
+                    <button
+                      className="btn btn-outline-success btn-sm flex-grow-1 fw-semibold"
+                      type="button"
+                      onClick={() => editSupplier(supplier)}
+                    >
+                      Ubah
+                    </button>
+                    <button
+                      className="btn btn-outline-danger btn-sm flex-grow-1 fw-semibold"
+                      type="button"
+                      onClick={() => deleteSupplier(supplier)}
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <Pagination
+          currentPage={activePage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          ariaLabel="Navigasi Halaman Supplier"
+        />
       </div>
-      <footer className="footer-db"><p className="mb-0">&copy; 2026 Gudang Pintar</p></footer>
-    </div>
+
+      {supplierToDelete && (
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          role="dialog"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setSupplierToDelete(null);
+          }}
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-sm">
+            <div className="modal-content shadow-lg border-0 text-center">
+              <div className="modal-body p-4">
+                <h6 className="mb-4 fw-bold">
+                  Apakah Anda yakin ingin menghapus supplier <br />
+                  <span className="text-danger fs-5">"{supplierToDelete.name}"</span>?
+                </h6>
+                <div className="d-flex justify-content-center gap-3">
+                  <button
+                    className="btn btn-danger fw-semibold px-4"
+                    type="button"
+                    onClick={confirmDeleteSupplier}
+                    autoFocus
+                  >
+                    Iya, Hapus
+                  </button>
+                  <button
+                    className="btn btn-secondary fw-semibold px-4"
+                    type="button"
+                    onClick={() => setSupplierToDelete(null)}
+                  >
+                    Batalkan
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </MainLayout>
   );
 }

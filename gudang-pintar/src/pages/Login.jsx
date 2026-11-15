@@ -1,30 +1,45 @@
 import { useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
+import Input from "../components/common/Input";
+import { getPendingAccounts, getStoredAccounts } from "../services/accountService";
 import "./login-style.css";
-
-const DEMO_ADMIN = {
-  email: "admin@gmail.com",
-  username: "admin",
-  password: "Admin123!",
-};
 
 export default function Login() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", username: "", password: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
-    const isValid = form.email.trim().toLowerCase() === DEMO_ADMIN.email &&
-      form.username.trim().toLowerCase() === DEMO_ADMIN.username &&
-      form.password.trim() === DEMO_ADMIN.password;
+    const cleanUsername = form.username.trim().toLowerCase();
+    const accounts = getStoredAccounts();
+    const pendingAccounts = getPendingAccounts();
 
-    if (!isValid) {
-      setMessage("Email, nama pengguna, atau kata sandi salah.");
+    const matched = accounts.find(
+      (acc) =>
+        acc.username.trim().toLowerCase() === cleanUsername &&
+        acc.password === form.password,
+    );
+
+    if (!matched) {
+      const matchedPending = pendingAccounts.find(
+        (acc) =>
+          acc.username.trim().toLowerCase() === cleanUsername &&
+          acc.password === form.password,
+      );
+      setMessage(
+        matchedPending
+          ? "Akun Anda masih menunggu persetujuan admin di Pengelolaan Akun."
+          : "Nama pengguna atau kata sandi salah.",
+      );
       return;
     }
 
     sessionStorage.setItem("gp-admin-session", "active");
+    sessionStorage.setItem(
+      "gp-current-user",
+      JSON.stringify({ id: matched.id, username: matched.username, role: matched.role }),
+    );
     navigate("/Dashboard", { replace: true });
   }
 
@@ -33,45 +48,63 @@ export default function Login() {
   }
 
   return (
-    <div className="login-app">
-      <header className="login-header d-flex align-items-center">
+    <div className="login-app d-flex flex-column min-vh-100 bg-light">
+      <header className="login-header d-flex align-items-center justify-content-between">
         <Link className="brand text-decoration-none" to="/login">
           Gudang Pintar
         </Link>
+        <Link className="btn btn-outline-success btn-sm fw-semibold" to="/register">
+          Daftar
+        </Link>
       </header>
 
-      <main className="login-page d-flex align-items-center justify-content-center">
-        <section className="login-popup" aria-labelledby="login-title">
-          <button
-            className="close-button"
-            type="button"
-            onClick={() => navigate("/Dashboard")}
-            aria-label="Tutup"
-          >
-            ×
-          </button>
+      <main className="login-page d-flex align-items-center justify-content-center flex-grow-1">
+        <section className="login-popup shadow-sm" aria-labelledby="login-title">
           <div className="popup-brand">Gudang Pintar</div>
           <h1 id="login-title">Masuk</h1>
           <p className="login-intro">Masuk ke akun toko Anda</p>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Alamat email</label>
-              <input className="form-control" type="email" id="email" name="email" placeholder="nama@gmail.com" autoComplete="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} required />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">Nama pengguna</label>
-              <input className="form-control" type="text" id="username" name="username" placeholder="Masukkan nama pengguna" autoComplete="username" value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} required />
+              <Input
+                id="username"
+                label="Nama pengguna"
+                type="text"
+                placeholder="Masukkan nama pengguna"
+                autoComplete="username"
+                value={form.username}
+                onChange={(event) => setForm({ ...form, username: event.target.value })}
+                required
+              />
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="form-label">Kata sandi</label>
-              <input className="form-control" type="password" id="password" name="password" placeholder="Masukkan kata sandi" autoComplete="current-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required />
+              <Input
+                id="password"
+                label="Kata sandi"
+                type="password"
+                placeholder="Masukkan kata sandi"
+                autoComplete="current-password"
+                value={form.password}
+                onChange={(event) => setForm({ ...form, password: event.target.value })}
+                required
+              />
             </div>
-            {message && <div className="alert alert-danger py-2" role="alert">{message}</div>}
-            <button className="btn btn-login w-100" type="submit">Masuk</button>
+            {message && (
+              <div className="alert alert-danger py-2" role="alert">
+                {message}
+              </div>
+            )}
+            <button className="btn btn-success btn-login w-100 fw-semibold" type="submit">
+              Masuk
+            </button>
           </form>
 
-          <p className="signup-note mb-0">Belum memiliki akun? Hubungi admin toko.</p>
+          <p className="signup-note mb-0">
+            Belum memiliki akun?{" "}
+            <Link className="login-account-link" to="/register">
+              Daftar
+            </Link>
+          </p>
         </section>
       </main>
     </div>

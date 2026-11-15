@@ -30,3 +30,39 @@
   background-color: #e9ecef;
   color: #495057;
 }
+
+.account-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.account-info {
+  min-width: 0;
+}
+
+.account-username {
+  word-break: break-word;
+}
+
+.account-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 575.98px) {
+  .account-card-body {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .account-actions {
+    width: 100%;
+  }
+
+  .account-actions .btn {
+    flex: 1;
+  }
+}

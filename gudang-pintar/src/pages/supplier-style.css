@@ -4,7 +4,7 @@
 
 .supplier-form {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 16px;
 }
 
@@ -16,7 +16,7 @@
 .supplier-form-actions {
   display: flex;
   gap: 10px;
-  align-items: end;
+  align-items: flex-end;
 }
 
 .supplier-grid {
@@ -45,11 +45,6 @@
   background: #e8f5ed;
   color: #198754;
   font-weight: 700;
-}
-
-.supplier-demo-note {
-  color: #6c757d;
-  font-size: 0.84rem;
 }
 
 @media (max-width: 575.98px) {
