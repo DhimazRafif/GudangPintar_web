@@ -73,9 +73,6 @@ export default function Dashboard() {
       count: itemsForStockCount.filter(
         (item) => item.quantity > item.notification_threshold,
       ).length,
-      activeVariant: "primary",
-      idleVariant: "filterIdle",
-      tooltip: "Tampilkan barang dengan stok di atas batas minimum",
     },
     {
       value: "menipis",
@@ -84,17 +81,11 @@ export default function Dashboard() {
         (item) =>
           item.quantity > 0 && item.quantity <= item.notification_threshold,
       ).length,
-      activeVariant: "warning",
-      idleVariant: "secondary",
-      tooltip: "Tampilkan barang yang hampir habis",
     },
     {
       value: "habis",
       label: "Stok Habis",
       count: itemsForStockCount.filter((item) => item.quantity === 0).length,
-      activeVariant: "danger",
-      idleVariant: "secondary",
-      tooltip: "Tampilkan barang yang stoknya 0",
     },
   ];
 
@@ -112,7 +103,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, selectedCategory, selectedStock]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -120,13 +111,14 @@ export default function Dashboard() {
   const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scroll({ top: 0, behavior: "smooth" });
-  };
-
   const isFilterActive =
     searchQuery !== "" || selectedCategory !== "all" || selectedStock !== "all";
+
+  const handleResetFilter = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSelectedStock("all");
+  };
   return (
     <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
       {showNotification && warningItemsCount > 0 && !isLoading && !error && (
@@ -136,7 +128,6 @@ export default function Dashboard() {
           style={{ borderLeft: "5px solid #ffc107" }}
         >
           <div>
-            <span className="fs-5 me-2"></span>
             <strong>Perhatian!</strong> Terdapat{" "}
             <strong>{warningItemsCount} barang</strong> yang stoknya menipis
             atau habis. Segera lakukan pengecekan.
@@ -157,9 +148,14 @@ export default function Dashboard() {
       {error && (
         <div className="alert alert-danger text-center shadow-sm" role="alert">
           <p className="mb-2">{error}</p>
-          <button className="btn btn-outline-danger btn-sm" onClick={refetch}>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={refetch}
+            title="Muat ulang data"
+          >
             Coba Lagi
-          </button>
+          </Button>
         </div>
       )}
 
@@ -202,11 +198,7 @@ export default function Dashboard() {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("all");
-                  setSelectedStock("all");
-                }}
+                onClick={handleResetFilter}
                 title="Kembalikan semua filter ke pengaturan awal"
               >
                 Reset Filter
@@ -227,11 +219,7 @@ export default function Dashboard() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory("all");
-                    setSelectedStock("all");
-                  }}
+                  onClick={handleResetFilter}
                 >
                   Reset Semua Filter
                 </Button>
