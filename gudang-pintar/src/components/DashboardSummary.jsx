@@ -1,14 +1,17 @@
 import React from "react";
+import "./DashboardSummary.css";
 
 export default function DashboardSummary({ items }) {
-  if (!items || items.length === 0) return null;
+  const activeItems = (items || []).filter((item) => item.isActive === 1);
 
-  const totalMakananMinuman = items.filter(
+  const totalMakananMinuman = activeItems.filter(
     (item) => item.categoryid === 2,
   ).length;
-  const totalNonMakanan = items.filter((item) => item.categoryid === 1).length;
+  const totalNonMakanan = activeItems.filter(
+    (item) => item.categoryid === 1,
+  ).length;
 
-  const warningItems = items.filter(
+  const warningItems = activeItems.filter(
     (item) => item.quantity <= item.notification_threshold,
   );
   warningItems.sort((a, b) => a.quantity - b.quantity);

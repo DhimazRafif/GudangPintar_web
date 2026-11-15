@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import "./pengelolaan_akun-style.css"; 
-import "./dashboard-style.css";
+import "./pengelolaan_akun-style.css";
 
 export default function PengelolaanAkun() {
   // State untuk data akun (dummy)
@@ -33,13 +32,18 @@ export default function PengelolaanAkun() {
   const filteredAccounts = accounts.filter(
     (acc) =>
       acc.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      acc.role.toLowerCase().includes(searchQuery.toLowerCase())
+      acc.role.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // --- FUNGSI BUKA MODAL TAMBAH ---
   const handleOpenTambah = () => {
     setModalMode("tambah");
-    setCurrentAccount({ id: null, username: "", password: "", role: "Pegawai" });
+    setCurrentAccount({
+      id: null,
+      username: "",
+      password: "",
+      role: "Pegawai",
+    });
     setFormError("");
     setIsModalOpen(true);
   };
@@ -85,14 +89,14 @@ export default function PengelolaanAkun() {
         accounts.map((acc) => {
           if (acc.id === currentAccount.id) {
             // Jika password di form kosong, gunakan password lama
-            const updatedPassword = currentAccount.password.trim() 
-              ? currentAccount.password 
+            const updatedPassword = currentAccount.password.trim()
+              ? currentAccount.password
               : acc.password;
-              
+
             return { ...acc, ...currentAccount, password: updatedPassword };
           }
           return acc;
-        })
+        }),
       );
     }
 
@@ -144,10 +148,15 @@ export default function PengelolaanAkun() {
                 </div>
               ) : (
                 filteredAccounts.map((acc) => (
-                  <div key={acc.id} className="card account-card mb-3 shadow-sm">
+                  <div
+                    key={acc.id}
+                    className="card account-card mb-3 shadow-sm"
+                  >
                     <div className="card-body d-flex justify-content-between align-items-center p-3">
                       <div>
-                        <h5 className="fw-bold mb-1 text-dark">{acc.username}</h5>
+                        <h5 className="fw-bold mb-1 text-dark">
+                          {acc.username}
+                        </h5>
                         <span
                           className={`role-badge ${
                             acc.role === "Admin" ? "admin" : "user"
@@ -185,7 +194,10 @@ export default function PengelolaanAkun() {
 
       {isModalOpen && (
         <>
-          <div className="modal-backdrop fade show" onClick={() => setIsModalOpen(false)}></div>
+          <div
+            className="modal-backdrop fade show"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
           <div className="modal fade show d-block" tabIndex="-1" role="dialog">
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content shadow-lg border-0">
@@ -213,22 +225,37 @@ export default function PengelolaanAkun() {
                         placeholder="Masukkan username"
                         value={currentAccount.username}
                         onChange={(e) =>
-                          setCurrentAccount({ ...currentAccount, username: e.target.value })
+                          setCurrentAccount({
+                            ...currentAccount,
+                            username: e.target.value,
+                          })
                         }
                       />
                     </div>
 
                     <div className="mb-3">
                       <label className="form-label fw-semibold">
-                        Password {modalMode === "edit" && <span className="text-muted fw-normal">(Kosongkan jika tidak diubah)</span>}
+                        Password{" "}
+                        {modalMode === "edit" && (
+                          <span className="text-muted fw-normal">
+                            (Kosongkan jika tidak diubah)
+                          </span>
+                        )}
                       </label>
                       <input
                         type="password"
                         className="form-control"
-                        placeholder={modalMode === "edit" ? "••••••••" : "Masukkan password"}
+                        placeholder={
+                          modalMode === "edit"
+                            ? "••••••••"
+                            : "Masukkan password"
+                        }
                         value={currentAccount.password}
                         onChange={(e) =>
-                          setCurrentAccount({ ...currentAccount, password: e.target.value })
+                          setCurrentAccount({
+                            ...currentAccount,
+                            password: e.target.value,
+                          })
                         }
                       />
                     </div>
@@ -239,7 +266,10 @@ export default function PengelolaanAkun() {
                         className="form-select"
                         value={currentAccount.role}
                         onChange={(e) =>
-                          setCurrentAccount({ ...currentAccount, role: e.target.value })
+                          setCurrentAccount({
+                            ...currentAccount,
+                            role: e.target.value,
+                          })
                         }
                       >
                         <option value="Admin">Admin</option>
@@ -255,7 +285,10 @@ export default function PengelolaanAkun() {
                     >
                       Batal
                     </button>
-                    <button type="submit" className="btn btn-success fw-semibold px-4">
+                    <button
+                      type="submit"
+                      className="btn btn-success fw-semibold px-4"
+                    >
                       Simpan
                     </button>
                   </div>
@@ -268,14 +301,20 @@ export default function PengelolaanAkun() {
 
       {isDeleteModalOpen && (
         <>
-          <div className="modal-backdrop fade show" onClick={() => setIsDeleteModalOpen(false)}></div>
+          <div
+            className="modal-backdrop fade show"
+            onClick={() => setIsDeleteModalOpen(false)}
+          ></div>
           <div className="modal fade show d-block" tabIndex="-1" role="dialog">
             <div className="modal-dialog modal-dialog-centered modal-sm">
               <div className="modal-content shadow-lg border-0 text-center">
                 <div className="modal-body p-4">
                   <h6 className="mb-4 fw-bold">
-                    Apakah Anda yakin ingin menghapus akun <br /> 
-                    <span className="text-danger fs-5">"{accountToDelete?.username}"</span>?
+                    Apakah Anda yakin ingin menghapus akun <br />
+                    <span className="text-danger fs-5">
+                      "{accountToDelete?.username}"
+                    </span>
+                    ?
                   </h6>
                   <div className="d-flex justify-content-center gap-3">
                     <button

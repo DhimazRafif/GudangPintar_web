@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ItemCard from "../components/ItemCard";
 import DashboardSummary from "../components/DashboardSummary";
-import "./dashboard-style.css";
+import "./Dashboard.css";
 import useFetch from "../hooks/useFetch";
-import MainLayout from "../Layouts/MainLayout";
+import MainLayout from "../layouts/MainLayout";
+import Pagination from "../components/common/Pagination";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,50 +96,12 @@ export default function Dashboard() {
           {filteredItems.length === 0 && (
             <p className="text-secondary mt-3">Barang tidak ditemukan.</p>
           )}
-          {totalPages > 1 && (
-            <nav
-              aria-label="Navigasi Halaman Dashboard"
-              className="mt-4 mb-2 d-flex justify-content-center"
-            >
-              <ul className="pagination pagination-sm">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link text-success"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                  >
-                    &laquo;prev
-                  </button>
-                </li>
-
-                {[...Array(totalPages)].map((_, index) => (
-                  <li
-                    key={index + 1}
-                    className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
-                  >
-                    <button
-                      className={`page-link ${currentPage === index + 1 ? "bg-success border-success text-white" : "text-success"}`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link text-success"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                  >
-                    Next &raquo;
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            ariaLabel="Navigasi Halaman Dashboard"
+          />
         </>
       )}
     </MainLayout>
