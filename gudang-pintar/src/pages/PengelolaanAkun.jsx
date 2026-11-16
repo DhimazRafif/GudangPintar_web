@@ -1,51 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../app-layouts/MainLayout";
 import Pagination from "../components/common/Pagination";
-import "./pengelolaan_akun-style.css";
+import Input from "../components/common/Input";
+import SelectControl from "../components/common/SelectControl";
+import Button from "../components/common/Button"; // Button Component
+import useNotification from "../hooks/useNotification";
+import {
+  getPendingAccounts,
+  getStoredAccounts,
+  savePendingAccounts,
+  saveStoredAccounts,
+} from "../services/accountService";
+import "./PengelolaanAkun.css";
 
 export default function PengelolaanAkun() {
-  const [accounts, setAccounts] = useState([
-    { id: 1, username: "Siti Khadijah", password: "admin123", role: "Admin" },
-    { id: 2, username: "Dhimaz", password: "user123", role: "Pegawai" },
-    { id: 3, username: "Budi Santoso", password: "budi123", role: "Pegawai" },
-    { id: 4, username: "Rina Melati", password: "rina123", role: "Admin" },
-    { id: 5, username: "Agus Salim", password: "agus123", role: "Pegawai" },
-    { id: 6, username: "Dewi Lestari", password: "dewi123", role: "Pegawai" },
-  ]);
+  const { notify } = useNotification();
+  const [accounts, setAccounts] = useState(getStoredAccounts);
+  const [pendingAccounts, setPendingAccounts] = useState(getPendingAccounts);
 
-  // --- STATE PENCARIAN & PAGINATION ---
+  // State Pencarian & Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // --- STATE MODAL TAMBAH/EDIT ---
+  // State Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("create"); // 'create' atau 'edit'
-  const [currentAccount, setCurrentAccount] = useState({
-    id: null,
-    username: "",
-    password: "",
-    role: "Pegawai",
-  });
+  const [modalMode, setModalMode] = useState("create");
+  const [currentAccount, setCurrentAccount] = useState({ id: null, username: "", password: "", role: "Pegawai" });
+  const [formError, setFormError] = useState({ username: "", password: "" }); // Inline Error State
 
-  // --- STATE MODAL HAPUS ---
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState(null);
 
-  // --- STATE NOTIFIKASI POP-UP (TOAST) ---
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
-  const toastTimeoutRef = useRef(null);
+  // State untuk konfirmasi Tolak Pending
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [accountToReject, setAccountToReject] = useState(null);
 
-  // --- FUNGSI NOTIFIKASI ---
-  const showToast = (message, type = "success") => {
-    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
-    setToast({ show: true, message, type });
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast((prev) => ({ ...prev, show: false }));
-    }, 3000); // Hilang setelah 3 detik
-  };
+  const modalRef = useRef(null);
 
-  // --- LOGIKA PENCARIAN & PAGINATION ---
+  // Simpan ke localStorage setiap ada perubahan
+  useEffect(() => { saveStoredAccounts(accounts); }, [accounts]);
+  useEffect(() => { savePendingAccounts(pendingAccounts); }, [pendingAccounts]);
+
+  // Filter & Pagination Logika
   const filteredAccounts = accounts.filter(
     (acc) =>
       acc.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -57,71 +54,101 @@ export default function PengelolaanAkun() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredAccounts.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Reset page ke 1 saat mencari
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  // Reset halaman ke 1 saat mencari
+  useEffect(() => { setCurrentPage(1); }, [searchQuery]);
 
-  // --- HANDLER MODAL TAMBAH/EDIT ---
+  // Cek jika halaman kosong setelah dihapus
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
+  // --- HANDLERS ---
   const handleOpenCreate = () => {
     setModalMode("create");
     setCurrentAccount({ id: null, username: "", password: "", role: "Pegawai" });
+    setFormError({ username: "", password: "" });
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (account) => {
     setModalMode("edit");
-    setCurrentAccount({ ...account, password: "" }); // Kosongkan password saat edit
+    setCurrentAccount({ ...account, password: "" });
+    setFormError({ username: "", password: "" });
     setIsModalOpen(true);
   };
 
   const handleSaveAccount = (e) => {
     e.preventDefault();
+    
+    // Validasi Inline
+    let hasError = false;
+    let newError = { username: "", password: "" };
 
     if (!currentAccount.username.trim()) {
-      return showToast("Username tidak boleh kosong.", "danger");
+      newError.username = "Username wajib diisi.";
+      hasError = true;
     }
     if (modalMode === "create" && !currentAccount.password.trim()) {
-      return showToast("Password tidak boleh kosong untuk akun baru.", "danger");
+      newError.password = "Password wajib diisi untuk akun baru.";
+      hasError = true;
     }
 
+    if (hasError) {
+      setFormError(newError);
+      return;
+    }
+
+    // Simpan Data
     if (modalMode === "create") {
       const newAccount = { ...currentAccount, id: Date.now() };
       setAccounts([...accounts, newAccount]);
-      showToast("Akun baru berhasil ditambahkan!", "success");
+      notify({ type: "success", message: "Akun baru berhasil ditambahkan!" });
     } else {
       setAccounts(
         accounts.map((acc) => {
           if (acc.id === currentAccount.id) {
-            const updatedPassword = currentAccount.password.trim()
-              ? currentAccount.password
-              : acc.password;
+            const updatedPassword = currentAccount.password.trim() ? currentAccount.password : acc.password;
             return { ...acc, ...currentAccount, password: updatedPassword };
           }
           return acc;
         })
       );
-      showToast("Data akun berhasil diperbarui!", "success");
+      notify({ type: "success", message: "Data akun berhasil diperbarui!" });
     }
     setIsModalOpen(false);
-  };
-
-  // --- HANDLER MODAL HAPUS ---
-  const handleOpenDelete = (account) => {
-    setAccountToDelete(account);
-    setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
     if (accountToDelete) {
       setAccounts(accounts.filter((acc) => acc.id !== accountToDelete.id));
-      showToast(`Akun "${accountToDelete.username}" telah dihapus.`, "success");
+      notify({ type: "success", message: `Akun "${accountToDelete.username}" telah dihapus.` });
     }
     setIsDeleteModalOpen(false);
     setAccountToDelete(null);
   };
 
-  // --- HANDLER KEYBOARD (ESC untuk tutup modal) ---
+  // --- PENDING ACTIONS ---
+  const handleApprovePending = (pending) => {
+    setAccounts((current) => [
+      ...current,
+      { id: Date.now(), username: pending.username, password: pending.password, role: pending.role || "Pegawai" },
+    ]);
+    setPendingAccounts((current) => current.filter((item) => item.id !== pending.id));
+    notify({ type: "success", message: `Akun "${pending.username}" disetujui.` });
+  };
+
+  const confirmRejectPending = () => {
+    if (accountToReject) {
+      setPendingAccounts((current) => current.filter((item) => item.id !== accountToReject.id));
+      notify({ type: "danger", message: `Pendaftaran "${accountToReject.username}" ditolak.` });
+    }
+    setIsRejectModalOpen(false);
+    setAccountToReject(null);
+  };
+
+  // --- KEYBOARD NAVIGATION ---
   const handleKeyDown = (e, closeFunc) => {
     if (e.key === "Escape") closeFunc(false);
   };
@@ -132,47 +159,66 @@ export default function PengelolaanAkun() {
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
           <h1 className="dashboard-title mb-1">Pengelolaan Akun</h1>
-          <p className="dashboard-description mb-0">
-            Kelola daftar pengguna dan hak akses sistem.
-          </p>
+          <p className="dashboard-description mb-0">Kelola daftar pengguna dan hak akses sistem.</p>
         </div>
-        <button
-          className="btn btn-success fw-semibold shadow-sm px-4 py-2 d-flex align-items-center justify-content-center gap-2"
-          onClick={handleOpenCreate}
-        >
-          <span>+</span> Tambah Akun Baru
-        </button>
+        <Button variant="primary" onClick={handleOpenCreate} icon="+">
+          Tambah Akun Baru
+        </Button>
       </div>
 
-      {/* DAFTAR AKUN */}
+
+      <section className="mb-4">
+        <div className="d-flex align-items-center gap-2 mb-3">
+          <h2 className="h5 fw-bold mb-0">Permintaan Pendaftaran</h2>
+          <span className={`badge ${pendingAccounts.length > 0 ? "text-bg-warning" : "text-bg-secondary"}`}>
+            {pendingAccounts.length}
+          </span>
+        </div>
+        {pendingAccounts.length === 0 ? (
+          <div className="card account-card shadow-sm border-0">
+            <div className="card-body p-3 text-secondary">Belum ada permintaan pendaftaran baru.</div>
+          </div>
+        ) : (
+          pendingAccounts.map((pending) => (
+            <div key={pending.id} className="card account-card mb-2 shadow-sm border-0">
+              <div className="card-body account-card-body p-3">
+                <div className="account-info">
+                  <h5 className="fw-bold mb-1 text-dark account-username">{pending.username}</h5>
+                  <span className="role-badge user">{pending.role || "Pegawai"}</span>
+                </div>
+                <div className="account-actions">
+                  <Button variant="primary" size="sm" onClick={() => handleApprovePending(pending)}>
+                    Terima
+                  </Button>
+                  <Button 
+                    variant="danger" 
+                    size="sm" 
+                    onClick={() => { setAccountToReject(pending); setIsRejectModalOpen(true); }}
+                  >
+                    Tolak
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </section>
+
+  
       <div className="mt-4">
         {currentItems.length === 0 ? (
-          <div className="alert alert-secondary text-center shadow-sm">
-            Tidak ada akun yang cocok dengan pencarian Anda.
-          </div>
+          <div className="alert alert-secondary text-center shadow-sm">Tidak ada akun yang cocok.</div>
         ) : (
           currentItems.map((acc) => (
             <div key={acc.id} className="card account-card mb-3 shadow-sm border-0">
-              <div className="card-body d-flex flex-column flex-sm-row justify-content-between align-items-sm-center p-3 gap-3">
-                <div>
-                  <h5 className="fw-bold mb-1 text-dark">{acc.username}</h5>
-                  <span className={`role-badge ${acc.role === "Admin" ? "admin" : "user"}`}>
-                    {acc.role}
-                  </span>
+              <div className="card-body account-card-body p-3">
+                <div className="account-info">
+                  <h5 className="fw-bold mb-1 text-dark account-username">{acc.username}</h5>
+                  <span className={`role-badge ${acc.role === "Admin" ? "admin" : "user"}`}>{acc.role}</span>
                 </div>
-                <div className="d-flex gap-2 w-100 w-sm-auto justify-content-end">
-                  <button
-                    className="btn btn-outline-success btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
-                    onClick={() => handleOpenEdit(acc)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-outline-danger btn-sm px-3 fw-semibold flex-fill flex-sm-grow-0"
-                    onClick={() => handleOpenDelete(acc)}
-                  >
-                    Hapus
-                  </button>
+                <div className="account-actions">
+                  <Button variant="secondary" size="sm" onClick={() => handleOpenEdit(acc)}>Edit</Button>
+                  <Button variant="danger" size="sm" onClick={() => { setAccountToDelete(acc); setIsDeleteModalOpen(true); }}>Hapus</Button>
                 </div>
               </div>
             </div>
@@ -180,101 +226,60 @@ export default function PengelolaanAkun() {
         )}
       </div>
 
-      {/* PAGINATION COMPONENT */}
-      {totalPages > 1 && (
-        <div className="mt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            ariaLabel="Navigasi Halaman Akun"
-          />
-        </div>
-      )}
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
-      {/* ==========================================
-          MODAL TAMBAH / EDIT AKUN
-      ========================================== */}
+     
       {isModalOpen && (
-        <div
-          className="modal fade show d-block"
-          tabIndex="-1"
-          role="dialog"
-          onKeyDown={(e) => handleKeyDown(e, setIsModalOpen)}
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" onKeyDown={(e) => handleKeyDown(e, setIsModalOpen)} style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered" ref={modalRef}>
             <div className="modal-content shadow-lg border-0">
               <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">
-                  {modalMode === "create" ? "Tambah Akun Baru" : "Edit Akun"}
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setIsModalOpen(false)}
-                  aria-label="Tutup"
-                ></button>
+                <h5 className="modal-title fw-bold">{modalMode === "create" ? "Tambah Akun Baru" : "Edit Akun"}</h5>
+                <button type="button" className="btn-close" onClick={() => setIsModalOpen(false)} aria-label="Tutup"></button>
               </div>
               <form onSubmit={handleSaveAccount}>
                 <div className="modal-body p-4">
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Username</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Masukkan username"
-                      value={currentAccount.username}
-                      onChange={(e) =>
-                        setCurrentAccount({ ...currentAccount, username: e.target.value })
-                      }
-                      autoFocus
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold d-flex justify-content-between">
-                      <span>Password</span>
-                      {modalMode === "edit" && (
-                        <small className="text-muted fw-normal">Kosongkan jika tidak diubah</small>
-                      )}
-                    </label>
-                    <input
+                  <Input
+                    id="account-username"
+                    label="Username"
+                    type="text"
+                    placeholder="Masukkan username"
+                    value={currentAccount.username}
+                    onChange={(e) => {
+                      setCurrentAccount({ ...currentAccount, username: e.target.value });
+                      if (formError.username) setFormError({ ...formError, username: "" }); // Hapus error saat diketik
+                    }}
+                    error={formError.username} // Tampilkan inline error
+                    autoFocus
+                  />
+                  <div className="mb-3 mt-3">
+                    <Input
+                      id="account-password"
+                      label="Password"
+                      hint={modalMode === "edit" ? "Kosongkan jika tidak diubah" : undefined}
                       type="password"
-                      className="form-control"
                       placeholder={modalMode === "edit" ? "••••••••" : "Masukkan password"}
                       value={currentAccount.password}
-                      onChange={(e) =>
-                        setCurrentAccount({ ...currentAccount, password: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setCurrentAccount({ ...currentAccount, password: e.target.value });
+                        if (formError.password) setFormError({ ...formError, password: "" });
+                      }}
+                      error={formError.password}
                     />
                   </div>
-
                   <div className="mb-2">
-                    <label className="form-label fw-semibold">Role</label>
-                    <select
-                      className="form-select"
+                    <SelectControl
+                      id="account-role"
+                      label="Role"
+                      options={[{ value: "Admin", label: "Admin" }, { value: "Pegawai", label: "Pegawai" }]}
                       value={currentAccount.role}
-                      onChange={(e) =>
-                        setCurrentAccount({ ...currentAccount, role: e.target.value })
-                      }
-                    >
-                      <option value="Admin">Admin</option>
-                      <option value="Pegawai">Pegawai</option>
-                    </select>
+                      onChange={(value) => setCurrentAccount({ ...currentAccount, role: value })}
+                    />
                   </div>
                 </div>
                 <div className="modal-footer bg-light border-0">
-                  <button
-                    type="button"
-                    className="btn btn-secondary fw-semibold px-4"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Batal
-                  </button>
-                  <button type="submit" className="btn btn-success fw-semibold px-4">
-                    Simpan
-                  </button>
+                  <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Batal</Button>
+                  <Button type="submit" variant="primary">Simpan</Button>
                 </div>
               </form>
             </div>
@@ -282,34 +287,19 @@ export default function PengelolaanAkun() {
         </div>
       )}
 
-      {/* ==========================================
-          MODAL KONFIRMASI HAPUS
-      ========================================== */}
+     
       {isDeleteModalOpen && (
-        <div
-          className="modal fade show d-block"
-          tabIndex="-1"
-          role="dialog"
-          onKeyDown={(e) => handleKeyDown(e, setIsDeleteModalOpen)}
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" onKeyDown={(e) => handleKeyDown(e, setIsDeleteModalOpen)} style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog modal-dialog-centered modal-sm">
             <div className="modal-content shadow-lg border-0 text-center">
               <div className="modal-body p-4">
                 <h6 className="mb-4 fw-bold">
-                  Apakah Anda yakin ingin menghapus akun <br />
+                  Yakin ingin menghapus akun <br />
                   <span className="text-danger fs-5">"{accountToDelete?.username}"</span>?
                 </h6>
                 <div className="d-flex justify-content-center gap-3">
-                  <button className="btn btn-danger fw-semibold px-4" onClick={confirmDelete} autoFocus>
-                    Iya, Hapus
-                  </button>
-                  <button
-                    className="btn btn-secondary fw-semibold px-4"
-                    onClick={() => setIsDeleteModalOpen(false)}
-                  >
-                    Batalkan
-                  </button>
+                  <Button variant="danger" onClick={confirmDelete} autoFocus>Iya, Hapus</Button>
+                  <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>Batalkan</Button>
                 </div>
               </div>
             </div>
@@ -317,29 +307,26 @@ export default function PengelolaanAkun() {
         </div>
       )}
 
-      {/* ==========================================
-          NOTIFIKASI POP-UP (TOAST)
-      ========================================== */}
-      {toast.show && (
-        <div
-          className="position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 1055, transition: "opacity 0.3s" }}
-        >
-          <div className={`toast show align-items-center text-white bg-${toast.type} border-0 shadow-lg`} role="alert" aria-live="assertive" aria-atomic="true">
-            <div className="d-flex">
-              <div className="toast-body fs-6 fw-semibold">
-                {toast.message}
+      
+      {isRejectModalOpen && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" onKeyDown={(e) => handleKeyDown(e, setIsRejectModalOpen)} style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered modal-sm">
+            <div className="modal-content shadow-lg border-0 text-center">
+              <div className="modal-body p-4">
+                <h6 className="mb-4 fw-bold">
+                  Tolak pendaftaran akun <br />
+                  <span className="text-danger fs-5">"{accountToReject?.username}"</span>?
+                </h6>
+                <div className="d-flex justify-content-center gap-3">
+                  <Button variant="danger" onClick={confirmRejectPending} autoFocus>Iya, Tolak</Button>
+                  <Button variant="secondary" onClick={() => setIsRejectModalOpen(false)}>Batalkan</Button>
+                </div>
               </div>
-              <button
-                type="button"
-                className="btn-close btn-close-white me-2 m-auto"
-                onClick={() => setToast({ ...toast, show: false })}
-                aria-label="Close"
-              ></button>
             </div>
           </div>
         </div>
       )}
+
     </MainLayout>
   );
 }

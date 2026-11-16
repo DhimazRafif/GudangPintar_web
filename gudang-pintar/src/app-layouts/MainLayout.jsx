@@ -1,7 +1,7 @@
-import React, { use, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import Footer from "../components/Footer/Footer";
+import { useState } from "react";
+import Header from "../components/layout/Header";
+import Sidebar from "../components/layout/Sidebar";
+import Footer from "../components/layout/Footer";
 
 export default function MainLayout({ children, searchQuery, setSearchQuery }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

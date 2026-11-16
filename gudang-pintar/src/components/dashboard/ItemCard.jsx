@@ -1,6 +1,6 @@
 import React from "react";
 import "./ItemCard.css";
-import formatRupiah from "../utils/formatCurrency";
+import formatRupiah from "../../utils/formatCurrency";
 
 export default function ItemCard({ item }) {
   let statusClass = "stock-aman";

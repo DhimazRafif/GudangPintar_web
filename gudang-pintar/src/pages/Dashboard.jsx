@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
-import ItemCard from "../components/ItemCard";
-import DashboardSummary from "../components/DashboardSummary";
+import ItemCard from "../components/dashboard/ItemCard";
+import DashboardSummary from "../components/dashboard/DashboardSummary";
 import "./Dashboard.css";
 import useFetch from "../hooks/useFetch";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../app-layouts/MainLayout";
 import Pagination from "../components/common/Pagination";
 import FilterGroup from "../components/common/FilterGroup";
 import Button from "../components/common/Button";
+import useNotification from "../hooks/useNotification";
 
 export default function Dashboard() {
+  const { notify } = useNotification();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStock, setSelectedStock] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
 
-  const [showNotification, setShowNotification] = useState(true);
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
+
+  useEffect(() => {
+    if (error) {
+      notify({ type: "danger", title: "Gagal memuat barang", message: error });
+    }
+  }, [error, notify]);
 
   const currentItems = items || [];
   const activeItems = currentItems.filter((item) => item.isActive === 1);
@@ -102,6 +109,16 @@ export default function Dashboard() {
   ).length;
 
   useEffect(() => {
+    if (!isLoading && !error && warningItemsCount > 0) {
+      notify({
+        type: "warning",
+        title: "Peringatan stok",
+        message: `Ada ${warningItemsCount} barang yang stoknya menipis atau habis. Segera lakukan pengecekan.`,
+      });
+    }
+  }, [isLoading, error, warningItemsCount, notify]);
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory, selectedStock]);
 
@@ -121,25 +138,6 @@ export default function Dashboard() {
   };
   return (
     <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
-      {showNotification && warningItemsCount > 0 && !isLoading && !error && (
-        <div
-          className="alert alert-warning shadow-sm d-flex align-items-center justify-content-between mb-4"
-          role="alert"
-          style={{ borderLeft: "5px solid #ffc107" }}
-        >
-          <div>
-            <strong>Perhatian!</strong> Terdapat{" "}
-            <strong>{warningItemsCount} barang</strong> yang stoknya menipis
-            atau habis. Segera lakukan pengecekan.
-          </div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setShowNotification(false)}
-            aria-label="Close"
-          ></button>
-        </div>
-      )}
       <h1 className="dashboard-title">Daftar Barang</h1>
       <p className="dashboard-description">
         Pantau jumlah dan status stok barang di gudang.

@@ -68,6 +68,16 @@ export default function Sidebar({ isOpen, closeSidebar }) {
                 Akun
               </NavLink>
             </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/supplier"
+                onClick={closeSidebar}
+                className="nav-link rounded sidebar-link"
+              >
+                Supplier
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </aside>

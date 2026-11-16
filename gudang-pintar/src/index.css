@@ -1,17 +1,63 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+  --gp-font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gp-primary: #198754;
+  --gp-primary-hover: #157347;
+  --gp-primary-rgb: 25, 135, 84;
+  --gp-success: #198754;
+  --gp-success-rgb: 25, 135, 84;
+  --gp-danger: #dc3545;
+  --gp-danger-hover: #bb2d3b;
+  --gp-danger-rgb: 220, 53, 69;
+  --gp-warning: #ffc107;
+  --gp-warning-rgb: 255, 193, 7;
+  --gp-info: #0d6efd;
+  --gp-page-bg: #f8f9fa;
+  --gp-surface: #ffffff;
+  --gp-text: #212529;
+  --gp-text-muted: #6c757d;
+  --gp-border: #dee2e6;
+  --gp-radius-control: 0.5rem;
+  --gp-radius-card: 0.75rem;
+  --gp-focus-ring: 0 0 0 0.2rem rgb(25 135 84 / 22%);
+  --gp-shadow-overlay: 0 0.5rem 1.5rem rgb(0 0 0 / 15%);
+  --bs-body-font-family: var(--gp-font-family);
+  --bs-body-color: var(--gp-text);
+  --bs-body-bg: var(--gp-page-bg);
+  --bs-success: var(--gp-success);
+  --bs-success-rgb: var(--gp-success-rgb);
+  --bs-danger: var(--gp-danger);
+  --bs-danger-rgb: var(--gp-danger-rgb);
+  --bs-warning: var(--gp-warning);
+  --bs-warning-rgb: var(--gp-warning-rgb);
+  --bs-info: var(--gp-info);
+}
+
+body {
+  font-family: var(--gp-font-family);
+  color: var(--gp-text);
+  background-color: var(--gp-page-bg);
+}
+
+:focus-visible {
+  outline-color: var(--gp-primary);
+}
+
 .main-content {
   min-width: 0;
-  background-color: #f8f9fa;
+  background-color: var(--gp-page-bg);
 }
 
 .dashboard-title {
   font-size: 1.6rem;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #212529;
+  color: var(--gp-text);
 }
 
 .dashboard-description {
-  color: #6c757d;
+  color: var(--gp-text-muted);
   margin-bottom: 20px;
 }
 
