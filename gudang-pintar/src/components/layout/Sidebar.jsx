@@ -6,17 +6,14 @@ import Button from "../common/Button";
 
 export default function Sidebar({ isOpen, closeSidebar }) {
   const navigate = useNavigate();
-  const currentUser = JSON.parse(
-    sessionStorage.getItem("gp-current-user") || "{}",
-  );
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser?.role === "Admin";
   const handleLogout = () => {
     if (closeSidebar) closeSidebar();
     sessionStorage.removeItem("gp-admin-session");
     sessionStorage.removeItem("gp-current-user");
     navigate("/login", { replace: true });
   };
-  const currentUser = getCurrentUser();
-  const isAdmin = currentUser?.role === "Admin";
 
   return (
     <>
