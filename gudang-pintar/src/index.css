@@ -18,6 +18,12 @@
   --gp-text: #212529;
   --gp-text-muted: #6c757d;
   --gp-border: #dee2e6;
+  --gp-border-strong: #adb5bd;
+  --gp-neutral: #495057;
+  --gp-neutral-soft: #e9ecef;
+  --gp-success-soft: #e8f5ed;
+  --gp-shadow-card: 0 0.25rem 0.75rem rgb(0 0 0 / 8%);
+  --gp-overlay: rgb(0 0 0 / 50%);
   --gp-radius-control: 0.5rem;
   --gp-radius-card: 0.75rem;
   --gp-focus-ring: 0 0 0 0.2rem rgb(25 135 84 / 22%);
@@ -41,7 +47,16 @@ body {
 }
 
 :focus-visible {
-  outline-color: var(--gp-primary);
+  outline: 3px solid var(--gp-primary);
+  outline-offset: 2px;
+  box-shadow: var(--gp-focus-ring);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 .main-content {
@@ -75,9 +90,9 @@ body {
 .footer-db {
   padding: 15px 20px;
   text-align: center;
-  color: #6c757d;
-  background-color: #ffffff;
-  border-top: 1px solid #dee2e6;
+  color: var(--gp-text-muted);
+  background-color: var(--gp-surface);
+  border-top: 1px solid var(--gp-border);
 }
 
 @media (max-width: 768px) {

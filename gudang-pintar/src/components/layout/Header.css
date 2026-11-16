@@ -13,9 +13,6 @@
 
 .logo {
   flex: 1;
-}
-
-.logo {
   color: var(--gp-primary);
   font-weight: bold;
   font-size: 2rem;
@@ -67,6 +64,13 @@
   align-items: center;
   justify-content: center;
   padding: 5px;
+}
+
+.logout-btn:focus-visible,
+.hamburger-btn:focus-visible {
+  outline: 3px solid var(--gp-primary);
+  outline-offset: 3px;
+  box-shadow: var(--gp-focus-ring);
 }
 
 @media (max-width: 767px) {

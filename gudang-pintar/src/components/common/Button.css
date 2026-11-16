@@ -10,7 +10,7 @@
 
 .custom-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--gp-shadow-card);
 }
 
 .custom-btn:active:not(:disabled) {
@@ -18,7 +18,7 @@
 }
 
 .custom-btn:focus-visible {
-  outline: 3px solid var(--gp-primary) !important;
+  outline: 3px solid var(--gp-primary);
   outline-offset: 2px;
 }
 

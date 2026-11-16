@@ -2,7 +2,7 @@ import React from "react";
 import Input from "../common/Input";
 import "./Header.css";
 
-export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
+export default function Header({ searchQuery, setSearchQuery, toggleSidebar, isSidebarOpen }) {
   return (
     <header className="header-db">
       <div className="logo"> Gudang Pintar</div>
@@ -23,9 +23,12 @@ export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
       <div className="header-right d-none d-md-flex"></div>
 
       <button
+        type="button"
         className="hamburger-btn"
         onClick={toggleSidebar}
-        aria-label="Buka Menu"
+        aria-label={isSidebarOpen ? "Tutup menu" : "Buka menu"}
+        aria-expanded={isSidebarOpen}
+        aria-controls="main-sidebar"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
