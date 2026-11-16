@@ -5,7 +5,13 @@ import Input from "../components/common/Input";
 import SelectControl from "../components/common/SelectControl";
 import Button from "../components/common/Button"; // Button Component
 import useNotification from "../hooks/useNotification";
-import { getStoredAccounts, saveStoredAccounts } from "../services/accountService";
+import useFocusTrap from "../hooks/useFocusTrap";
+import {
+  getPendingAccounts,
+  getStoredAccounts,
+  savePendingAccounts,
+  saveStoredAccounts,
+} from "../services/accountService";
 import "./PengelolaanAkun.css";
 
 export default function PengelolaanAkun() {
@@ -15,7 +21,7 @@ export default function PengelolaanAkun() {
   // State Pencarian & Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [pageSize, setPageSize] = useState("10");
 
   // State Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +33,30 @@ export default function PengelolaanAkun() {
   const [accountToDelete, setAccountToDelete] = useState(null);
 
   const modalRef = useRef(null);
+  const deleteModalRef = useRef(null);
+  const rejectModalRef = useRef(null);
+
+  useFocusTrap({
+    active: isModalOpen,
+    containerRef: modalRef,
+    onEscape: () => setIsModalOpen(false),
+  });
+  useFocusTrap({
+    active: isDeleteModalOpen,
+    containerRef: deleteModalRef,
+    onEscape: () => {
+      setIsDeleteModalOpen(false);
+      setAccountToDelete(null);
+    },
+  });
+  useFocusTrap({
+    active: isRejectModalOpen,
+    containerRef: rejectModalRef,
+    onEscape: () => {
+      setIsRejectModalOpen(false);
+      setAccountToReject(null);
+    },
+  });
 
   // Simpan ke localStorage setiap ada perubahan
   useEffect(() => { saveStoredAccounts(accounts); }, [accounts]);
@@ -38,10 +68,15 @@ export default function PengelolaanAkun() {
       acc.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAccounts.slice(indexOfFirstItem, indexOfLastItem);
+  const itemsPerPage = pageSize === "all" ? filteredAccounts.length : Number(pageSize);
+  const totalPages = Math.max(
+    1,
+    pageSize === "all" ? 1 : Math.ceil(filteredAccounts.length / itemsPerPage),
+  );
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+  const currentItems = pageSize === "all"
+    ? filteredAccounts
+    : filteredAccounts.slice(indexOfFirstItem, indexOfFirstItem + itemsPerPage);
 
   // Reset halaman ke 1 saat mencari
   useEffect(() => { setCurrentPage(1); }, [searchQuery]);
@@ -118,9 +153,23 @@ export default function PengelolaanAkun() {
     setAccountToDelete(null);
   };
 
-  // --- KEYBOARD NAVIGATION ---
-  const handleKeyDown = (e, closeFunc) => {
-    if (e.key === "Escape") closeFunc(false);
+  // --- PENDING ACTIONS ---
+  const handleApprovePending = (pending) => {
+    setAccounts((current) => [
+      ...current,
+      { id: Date.now(), username: pending.username, password: pending.password, role: pending.role || "Pegawai" },
+    ]);
+    setPendingAccounts((current) => current.filter((item) => item.id !== pending.id));
+    notify({ type: "success", message: `Akun "${pending.username}" disetujui.` });
+  };
+
+  const confirmRejectPending = () => {
+    if (accountToReject) {
+      setPendingAccounts((current) => current.filter((item) => item.id !== accountToReject.id));
+      notify({ type: "danger", message: `Pendaftaran "${accountToReject.username}" ditolak.` });
+    }
+    setIsRejectModalOpen(false);
+    setAccountToReject(null);
   };
 
   return (
@@ -157,15 +206,23 @@ export default function PengelolaanAkun() {
         )}
       </div>
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        ariaLabel="Navigasi Halaman Akun"
+        pageSize={pageSize}
+        onPageSizeChange={setPageSize}
+        itemLabel="akun"
+      />
 
      
       {isModalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog" onKeyDown={(e) => handleKeyDown(e, setIsModalOpen)} style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="account-modal-title" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog modal-dialog-centered" ref={modalRef}>
             <div className="modal-content shadow-lg border-0">
               <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">{modalMode === "create" ? "Tambah Akun Baru" : "Edit Akun"}</h5>
+                <h5 className="modal-title fw-bold" id="account-modal-title">{modalMode === "create" ? "Tambah Akun Baru" : "Edit Akun"}</h5>
                 <button type="button" className="btn-close" onClick={() => setIsModalOpen(false)} aria-label="Tutup"></button>
               </div>
               <form onSubmit={handleSaveAccount}>
@@ -181,7 +238,6 @@ export default function PengelolaanAkun() {
                       if (formError.username) setFormError({ ...formError, username: "" }); // Hapus error saat diketik
                     }}
                     error={formError.username} // Tampilkan inline error
-                    autoFocus
                   />
                   <div className="mb-3 mt-3">
                     <Input
@@ -220,17 +276,37 @@ export default function PengelolaanAkun() {
 
      
       {isDeleteModalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog" onKeyDown={(e) => handleKeyDown(e, setIsDeleteModalOpen)} style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div ref={deleteModalRef} className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="delete-account-title" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog modal-dialog-centered modal-sm">
             <div className="modal-content shadow-lg border-0 text-center">
               <div className="modal-body p-4">
-                <h6 className="mb-4 fw-bold">
+                <h6 className="mb-4 fw-bold" id="delete-account-title">
                   Yakin ingin menghapus akun <br />
                   <span className="text-danger fs-5">"{accountToDelete?.username}"</span>?
                 </h6>
                 <div className="d-flex justify-content-center gap-3">
-                  <Button variant="danger" onClick={confirmDelete} autoFocus>Iya, Hapus</Button>
+                  <Button variant="danger" onClick={confirmDelete}>Iya, Hapus</Button>
                   <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>Batalkan</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      
+      {isRejectModalOpen && (
+        <div ref={rejectModalRef} className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="reject-account-title" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered modal-sm">
+            <div className="modal-content shadow-lg border-0 text-center">
+              <div className="modal-body p-4">
+                <h6 className="mb-4 fw-bold" id="reject-account-title">
+                  Tolak pendaftaran akun <br />
+                  <span className="text-danger fs-5">"{accountToReject?.username}"</span>?
+                </h6>
+                <div className="d-flex justify-content-center gap-3">
+                  <Button variant="danger" onClick={confirmRejectPending}>Iya, Tolak</Button>
+                  <Button variant="secondary" onClick={() => setIsRejectModalOpen(false)}>Batalkan</Button>
                 </div>
               </div>
             </div>

@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Header from "../components/layout/Header";
 import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
 
 export default function MainLayout({ children, searchQuery, setSearchQuery }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const closeSidebar = () => setIsSidebarOpen(false);
+  const toggleSidebar = () => setIsSidebarOpen((isOpen) => !isOpen);
+  const closeSidebar = useCallback(() => setIsSidebarOpen(false), []);
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -14,10 +14,14 @@ export default function MainLayout({ children, searchQuery, setSearchQuery }) {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         toggleSidebar={toggleSidebar}
+        isSidebarOpen={isSidebarOpen}
       />
 
       <div className="d-flex flex-grow-1 w-100" style={{ minHeight: 0 }}>
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          closeSidebar={closeSidebar}
+        />
 
         <main
           className="main-content flex-grow-1 d-flex flex-column w-100"

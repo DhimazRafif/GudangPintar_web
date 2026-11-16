@@ -22,14 +22,14 @@
 }
 
 .history-head {
-  border-bottom: 1px solid #888;
+  border-bottom: 1px solid var(--gp-border-strong);
   padding-bottom: 7px;
   font-size: 12px;
   font-weight: bold;
 }
 
 .history-date {
-  color: #777;
+  color: var(--gp-text-muted);
   font-weight: normal;
   white-space: nowrap;
 }

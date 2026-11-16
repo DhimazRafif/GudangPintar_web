@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../services/accountService";
+import useFocusTrap from "../../hooks/useFocusTrap";
 import "./Sidebar.css";
 import Button from "../common/Button";
 
@@ -8,6 +9,7 @@ export default function Sidebar({ isOpen, closeSidebar }) {
   const navigate = useNavigate();
   const currentUser = getCurrentUser();
   const isAdmin = currentUser?.role === "Admin";
+
   const handleLogout = () => {
     if (closeSidebar) closeSidebar();
     sessionStorage.removeItem("gp-admin-session");
@@ -15,18 +17,53 @@ export default function Sidebar({ isOpen, closeSidebar }) {
     navigate("/login", { replace: true });
   };
 
+  const sidebarRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useFocusTrap({
+    active: isOpen,
+    containerRef: sidebarRef,
+    initialFocusRef: closeButtonRef,
+    onEscape: closeSidebar,
+  });
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    document.body.classList.add("gp-sidebar-open");
+    return () => {
+      document.body.classList.remove("gp-sidebar-open");
+    };
+  }, [isOpen]);
+
   return (
     <>
       {isOpen && (
-        <div className="sidebar-overlay d-md-none" onClick={closeSidebar}></div>
+        <button
+          type="button"
+          className="sidebar-overlay d-md-none"
+          onClick={closeSidebar}
+          aria-label="Tutup menu"
+          tabIndex={-1}
+        />
       )}
 
       <aside
+        ref={sidebarRef}
+        id="main-sidebar"
+        role={isOpen ? "dialog" : undefined}
+        aria-label="Navigasi utama"
+        aria-modal={isOpen ? "true" : undefined}
         className={`sidebar-db bg-white p-3 border-bottom border-md-end d-flex flex-column ${isOpen ? "open" : ""}`}
       >
         <div className="d-flex justify-content-between align-items-center d-md-none mb-3">
           <span className="fw-bold fs-5 text-success">Menu</span>
-          <button className="btn-close" onClick={closeSidebar}></button>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            className="btn-close"
+            onClick={closeSidebar}
+            aria-label="Tutup menu"
+          />
         </div>
 
         <nav className="flex-grow-1">

@@ -20,15 +20,15 @@
 }
 
 .transaction-page .transaction-action-button--out {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #dc3545;
-  --bs-btn-border-color: #dc3545;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #bb2d3b;
-  --bs-btn-hover-border-color: #b02a37;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #b02a37;
-  --bs-btn-active-border-color: #a52834;
+  --bs-btn-color: var(--gp-surface);
+  --bs-btn-bg: var(--gp-danger);
+  --bs-btn-border-color: var(--gp-danger);
+  --bs-btn-hover-color: var(--gp-surface);
+  --bs-btn-hover-bg: var(--gp-danger-hover);
+  --bs-btn-hover-border-color: var(--gp-danger-hover);
+  --bs-btn-active-color: var(--gp-surface);
+  --bs-btn-active-bg: var(--gp-danger-hover);
+  --bs-btn-active-border-color: var(--gp-danger-hover);
 }
 
 .transaction-page .transaction-table {
@@ -66,24 +66,6 @@
 
 .transaction-page .transaction-modal-dialog .summary-table {
   min-width: 600px;
-}
-
-.transaction-page .page-size-select {
-  width: 100px;
-}
-
-.transaction-page .transaction-pagination-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
-  margin-top: 1rem;
-}
-
-.transaction-page .transaction-pagination-row > nav {
-  margin: 0 !important;
-  padding: 0 !important;
 }
 
 @media (max-width: 575.98px) {
