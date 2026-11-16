@@ -17,7 +17,6 @@ import "./PengelolaanAkun.css";
 export default function PengelolaanAkun() {
   const { notify } = useNotification();
   const [accounts, setAccounts] = useState(getStoredAccounts);
-  const [pendingAccounts, setPendingAccounts] = useState(getPendingAccounts);
 
   // State Pencarian & Pagination
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,10 +31,6 @@ export default function PengelolaanAkun() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState(null);
-
-  // State untuk konfirmasi Tolak Pending
-  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  const [accountToReject, setAccountToReject] = useState(null);
 
   const modalRef = useRef(null);
   const deleteModalRef = useRef(null);
@@ -65,7 +60,6 @@ export default function PengelolaanAkun() {
 
   // Simpan ke localStorage setiap ada perubahan
   useEffect(() => { saveStoredAccounts(accounts); }, [accounts]);
-  useEffect(() => { savePendingAccounts(pendingAccounts); }, [pendingAccounts]);
 
   // Filter & Pagination Logika
   const filteredAccounts = accounts.filter(
@@ -191,45 +185,6 @@ export default function PengelolaanAkun() {
         </Button>
       </div>
 
-
-      <section className="mb-4">
-        <div className="d-flex align-items-center gap-2 mb-3">
-          <h2 className="h5 fw-bold mb-0">Permintaan Pendaftaran</h2>
-          <span className={`badge ${pendingAccounts.length > 0 ? "text-bg-warning" : "text-bg-secondary"}`}>
-            {pendingAccounts.length}
-          </span>
-        </div>
-        {pendingAccounts.length === 0 ? (
-          <div className="card account-card shadow-sm border-0">
-            <div className="card-body p-3 text-secondary">Belum ada permintaan pendaftaran baru.</div>
-          </div>
-        ) : (
-          pendingAccounts.map((pending) => (
-            <div key={pending.id} className="card account-card mb-2 shadow-sm border-0">
-              <div className="card-body account-card-body p-3">
-                <div className="account-info">
-                  <h5 className="fw-bold mb-1 text-dark account-username">{pending.username}</h5>
-                  <span className="role-badge user">{pending.role || "Pegawai"}</span>
-                </div>
-                <div className="account-actions">
-                  <Button variant="primary" size="sm" onClick={() => handleApprovePending(pending)}>
-                    Terima
-                  </Button>
-                  <Button 
-                    variant="danger" 
-                    size="sm" 
-                    onClick={() => { setAccountToReject(pending); setIsRejectModalOpen(true); }}
-                  >
-                    Tolak
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </section>
-
-  
       <div className="mt-4">
         {currentItems.length === 0 ? (
           <div className="alert alert-secondary text-center shadow-sm">Tidak ada akun yang cocok.</div>
