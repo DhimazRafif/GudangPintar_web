@@ -17,6 +17,7 @@ import "./PengelolaanAkun.css";
 export default function PengelolaanAkun() {
   const { notify } = useNotification();
   const [accounts, setAccounts] = useState(getStoredAccounts);
+  const [pendingAccounts, setPendingAccounts] = useState(getPendingAccounts);
 
   // State Pencarian & Pagination
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,8 @@ export default function PengelolaanAkun() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState(null);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [accountToReject, setAccountToReject] = useState(null);
 
   const modalRef = useRef(null);
   const deleteModalRef = useRef(null);
@@ -60,6 +63,7 @@ export default function PengelolaanAkun() {
 
   // Simpan ke localStorage setiap ada perubahan
   useEffect(() => { saveStoredAccounts(accounts); }, [accounts]);
+  useEffect(() => { savePendingAccounts(pendingAccounts); }, [pendingAccounts]);
 
   // Filter & Pagination Logika
   const filteredAccounts = accounts.filter(

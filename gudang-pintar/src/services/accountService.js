@@ -1,4 +1,5 @@
 const ACCOUNTS_STORAGE_KEY = "gp-accounts";
+const PENDING_ACCOUNTS_STORAGE_KEY = "gp-pending-accounts";
 
 export const DEFAULT_ACCOUNTS = [
   { id: 1, username: "sitikhadijah", password: "admin123", role: "Admin" },
@@ -23,6 +24,24 @@ export function getStoredAccounts() {
 export function saveStoredAccounts(accounts) {
   try {
     localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
+  } catch {
+    return;
+  }
+}
+
+export function getPendingAccounts() {
+  try {
+    const raw = localStorage.getItem(PENDING_ACCOUNTS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function savePendingAccounts(accounts) {
+  try {
+    localStorage.setItem(PENDING_ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
   } catch {
     return;
   }
