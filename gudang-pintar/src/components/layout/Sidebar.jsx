@@ -1,9 +1,20 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../services/accountService";
 import "./Sidebar.css";
+import Button from "../common/Button";
 
 export default function Sidebar({ isOpen, closeSidebar }) {
+  const navigate = useNavigate();
+  const currentUser = JSON.parse(
+    sessionStorage.getItem("gp-current-user") || "{}",
+  );
+  const handleLogout = () => {
+    if (closeSidebar) closeSidebar();
+    sessionStorage.removeItem("gp-admin-session");
+    sessionStorage.removeItem("gp-current-user");
+    navigate("/login", { replace: true });
+  };
   const currentUser = getCurrentUser();
   const isAdmin = currentUser?.role === "Admin";
 
@@ -86,6 +97,17 @@ export default function Sidebar({ isOpen, closeSidebar }) {
             </li>
           </ul>
         </nav>
+
+        <div className="mt-auto pt-3 border-top">
+          <Button
+            variant="danger"
+            className="w-100"
+            onClick={handleLogout}
+            title="Keluar dari aplikasi Gudang Pintar"
+          >
+            Log Out
+          </Button>
+        </div>
       </aside>
     </>
   );
