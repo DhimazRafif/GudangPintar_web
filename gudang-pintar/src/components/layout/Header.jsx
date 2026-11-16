@@ -1,17 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import Input from "../common/Input";
 import "./Header.css";
 
 export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
-  const navigate = useNavigate();
-
-  function handleLogout() {
-    sessionStorage.removeItem("gp-admin-session");
-    sessionStorage.removeItem("gp-current-user");
-    navigate("/login", { replace: true });
-  }
-
   return (
     <header className="header-db">
       <div className="logo"> Gudang Pintar</div>
@@ -29,9 +20,7 @@ export default function Header({ searchQuery, setSearchQuery, toggleSidebar }) {
         </form>
       </div>
 
-      <div className="header-right d-none d-md-flex">
-        <button className="logout-btn" onClick={handleLogout}>Log out</button>
-      </div>
+      <div className="header-right d-none d-md-flex"></div>
 
       <button
         className="hamburger-btn"
