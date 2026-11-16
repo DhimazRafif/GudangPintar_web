@@ -47,3 +47,12 @@ export function savePendingAccounts(pendingAccounts) {
     return;
   }
 }
+
+export function getCurrentUser() {
+  try {
+    const raw = sessionStorage.getItem("gp-current-user");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}

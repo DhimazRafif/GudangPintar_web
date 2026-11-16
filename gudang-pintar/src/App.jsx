@@ -4,7 +4,6 @@ import Transaksi from "./pages/Transaksi";
 import History from "./pages/History";
 import PengelolaanAkun from "./pages/PengelolaanAkun";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Supplier from "./pages/Supplier";
 import { Navigate, Route, Routes } from "react-router-dom";
 import NotificationProvider from "./contexts/NotificationProvider";
@@ -34,7 +33,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to={sessionStorage.getItem("gp-admin-session") === "active" ? "/Dashboard" : "/login"} replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/Dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
         <Route path="/transaksi" element={<RequireAuth><Transaksi /></RequireAuth>} />
         <Route path="/history" element={<RequireAuth><History /></RequireAuth>} />

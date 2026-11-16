@@ -1,8 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { getCurrentUser } from "../../services/accountService";
 import "./Sidebar.css";
 
 export default function Sidebar({ isOpen, closeSidebar }) {
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser?.role === "Admin";
+
   return (
     <>
       {isOpen && (
@@ -59,15 +63,17 @@ export default function Sidebar({ isOpen, closeSidebar }) {
               </NavLink>
             </li>
 
-            <li className="nav-item">
-              <NavLink
-                to="/akun"
-                onClick={closeSidebar}
-                className="nav-link rounded sidebar-link"
-              >
-                Akun
-              </NavLink>
-            </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <NavLink
+                  to="/akun"
+                  onClick={closeSidebar}
+                  className="nav-link rounded sidebar-link"
+                >
+                  Akun
+                </NavLink>
+              </li>
+            )}
 
             <li className="nav-item">
               <NavLink
