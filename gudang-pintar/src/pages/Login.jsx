@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import Input from "../components/common/Input";
-import { getPendingAccounts, getStoredAccounts } from "../services/accountService";
+import { getStoredAccounts } from "../services/accountService";
 import "./login-style.css";
 
 export default function Login() {
@@ -13,7 +13,6 @@ export default function Login() {
     event.preventDefault();
     const cleanUsername = form.username.trim().toLowerCase();
     const accounts = getStoredAccounts();
-    const pendingAccounts = getPendingAccounts();
 
     const matched = accounts.find(
       (acc) =>
@@ -22,16 +21,7 @@ export default function Login() {
     );
 
     if (!matched) {
-      const matchedPending = pendingAccounts.find(
-        (acc) =>
-          acc.username.trim().toLowerCase() === cleanUsername &&
-          acc.password === form.password,
-      );
-      setMessage(
-        matchedPending
-          ? "Akun Anda masih menunggu persetujuan admin di Pengelolaan Akun."
-          : "Nama pengguna atau kata sandi salah.",
-      );
+      setMessage("Nama pengguna atau kata sandi salah.");
       return;
     }
 
@@ -49,12 +39,9 @@ export default function Login() {
 
   return (
     <div className="login-app d-flex flex-column min-vh-100 bg-light">
-      <header className="login-header d-flex align-items-center justify-content-between">
+      <header className="login-header d-flex align-items-center">
         <Link className="brand text-decoration-none" to="/login">
           Gudang Pintar
-        </Link>
-        <Link className="btn btn-outline-success btn-sm fw-semibold" to="/register">
-          Daftar
         </Link>
       </header>
 
@@ -99,12 +86,7 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="signup-note mb-0">
-            Belum memiliki akun?{" "}
-            <Link className="login-account-link" to="/register">
-              Daftar
-            </Link>
-          </p>
+          <p className="signup-note mb-0">Belum memiliki akun? Hubungi admin toko.</p>
         </section>
       </main>
     </div>

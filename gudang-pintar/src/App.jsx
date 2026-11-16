@@ -4,7 +4,6 @@ import Transaksi from "./pages/Transaksi";
 import History from "./pages/History";
 import PengelolaanAkun from "./pages/PengelolaanAkun";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Supplier from "./pages/Supplier";
 import { Navigate, Route, Routes } from "react-router-dom";
 import NotificationProvider from "./contexts/NotificationProvider";

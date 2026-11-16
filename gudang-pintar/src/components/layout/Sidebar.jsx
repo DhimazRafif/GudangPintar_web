@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../../services/accountService";
 import "./Sidebar.css";
 import Button from "../common/Button";
 
@@ -14,6 +15,8 @@ export default function Sidebar({ isOpen, closeSidebar }) {
     sessionStorage.removeItem("gp-current-user");
     navigate("/login", { replace: true });
   };
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser?.role === "Admin";
 
   return (
     <>
@@ -71,15 +74,17 @@ export default function Sidebar({ isOpen, closeSidebar }) {
               </NavLink>
             </li>
 
-            <li className="nav-item">
-              <NavLink
-                to="/akun"
-                onClick={closeSidebar}
-                className="nav-link rounded sidebar-link"
-              >
-                Akun
-              </NavLink>
-            </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <NavLink
+                  to="/akun"
+                  onClick={closeSidebar}
+                  className="nav-link rounded sidebar-link"
+                >
+                  Akun
+                </NavLink>
+              </li>
+            )}
 
             <li className="nav-item">
               <NavLink
