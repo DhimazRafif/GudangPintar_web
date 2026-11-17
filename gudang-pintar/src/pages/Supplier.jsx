@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MainLayout from "../app-layouts/MainLayout";
 import Input from "../components/common/Input";
 import Pagination from "../components/common/Pagination";
 import useNotification from "../hooks/useNotification";
-import "./supplier-style.css";
+import useFocusTrap from "../hooks/useFocusTrap";
+import "./Supplier.css";
 
 const initialSuppliers = [
   { supplierid: 1, name: "PT Sumber Segar" },
@@ -31,10 +32,17 @@ export default function Supplier() {
   const [suppliers, setSuppliers] = useState(loadSuppliers);
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState("10");
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [supplierToDelete, setSupplierToDelete] = useState(null);
-  const itemsPerPage = 10;
+  const deleteModalRef = useRef(null);
+
+  useFocusTrap({
+    active: Boolean(supplierToDelete),
+    containerRef: deleteModalRef,
+    onEscape: () => setSupplierToDelete(null),
+  });
 
   useEffect(() => {
     try {
@@ -49,16 +57,24 @@ export default function Supplier() {
     return suppliers.filter((supplier) => supplier.name.toLowerCase().includes(keyword));
   }, [query, suppliers]);
 
-  const totalPages = Math.ceil(filteredSuppliers.length / itemsPerPage);
-  const activePage = Math.min(currentPage, Math.max(1, totalPages));
-  const displayedSuppliers = filteredSuppliers.slice(
-    (activePage - 1) * itemsPerPage,
-    activePage * itemsPerPage,
+  const itemsPerPage = pageSize === "all" ? filteredSuppliers.length : Number(pageSize);
+  const totalPages = Math.max(
+    1,
+    pageSize === "all" ? 1 : Math.ceil(filteredSuppliers.length / itemsPerPage),
   );
+  const activePage = Math.min(currentPage, Math.max(1, totalPages));
+  const displayedSuppliers = pageSize === "all"
+    ? filteredSuppliers
+    : filteredSuppliers.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage);
 
   function resetForm() {
     setForm(emptyForm);
     setEditingId(null);
+  }
+
+  function handleSearchChange(value) {
+    setQuery(value);
+    setCurrentPage(1);
   }
 
   function handleSubmit(event) {
@@ -108,7 +124,7 @@ export default function Supplier() {
   }
 
   return (
-    <MainLayout searchQuery={query} setSearchQuery={setQuery}>
+    <MainLayout searchQuery={query} setSearchQuery={handleSearchChange}>
       <div className="supplier-page">
         <div className="mb-4">
           <h1 className="dashboard-title mb-1">Kelola Supplier</h1>
@@ -204,23 +220,26 @@ export default function Supplier() {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
           ariaLabel="Navigasi Halaman Supplier"
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          itemLabel="supplier"
         />
       </div>
 
       {supplierToDelete && (
         <div
+          ref={deleteModalRef}
           className="modal fade show d-block"
           tabIndex="-1"
           role="dialog"
-          onKeyDown={(event) => {
-            if (event.key === "Escape") setSupplierToDelete(null);
-          }}
+          aria-modal="true"
+          aria-labelledby="delete-supplier-title"
           style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
           <div className="modal-dialog modal-dialog-centered modal-sm">
             <div className="modal-content shadow-lg border-0 text-center">
               <div className="modal-body p-4">
-                <h6 className="mb-4 fw-bold">
+                <h6 className="mb-4 fw-bold" id="delete-supplier-title">
                   Apakah Anda yakin ingin menghapus supplier <br />
                   <span className="text-danger fs-5">"{supplierToDelete.name}"</span>?
                 </h6>
@@ -229,7 +248,6 @@ export default function Supplier() {
                     className="btn btn-danger fw-semibold px-4"
                     type="button"
                     onClick={confirmDeleteSupplier}
-                    autoFocus
                   >
                     Iya, Hapus
                   </button>

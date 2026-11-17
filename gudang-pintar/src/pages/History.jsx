@@ -18,9 +18,6 @@ const historyData = [
   { id: 4, action: "Ubah kategori", itemName: "Air mineral", before: "Makanan dan minuman", after: "ATK", date: "4/6/2025" },
 ];
 
-// Jumlah card tiap halaman
-const ITEMS_PER_PAGE = 6;
-
 function getChanges(entry) {
   return Array.isArray(entry.changes)
     ? entry.changes
@@ -65,6 +62,7 @@ export default function History() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState("10");
   const [savedHistory, setSavedHistory] = useState(getHistoryEntries);
 
   // Sinkronisasi History saat ada perubahan pada tab ini atau tab lain.
@@ -124,10 +122,16 @@ export default function History() {
   }));
 
   const filteredHistory = searchedHistory.filter((entry) => matchesType(entry, selectedType));
-  const totalPages = Math.ceil(filteredHistory.length / ITEMS_PER_PAGE);
+  const itemsPerPage = pageSize === "all" ? filteredHistory.length : Number(pageSize);
+  const totalPages = Math.max(
+    1,
+    pageSize === "all" ? 1 : Math.ceil(filteredHistory.length / itemsPerPage),
+  );
   const activePage = Math.min(currentPage, Math.max(totalPages, 1));
-  const startIndex = (activePage - 1) * ITEMS_PER_PAGE;
-  const displayedHistory = filteredHistory.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const displayedHistory = pageSize === "all"
+    ? filteredHistory
+    : filteredHistory.slice(startIndex, startIndex + itemsPerPage);
   const isFilterActive = keyword !== "" || selectedType !== "all";
 
   return (
@@ -188,6 +192,9 @@ export default function History() {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
           ariaLabel="Navigasi Halaman Riwayat"
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          itemLabel="riwayat"
         />
       </div>
     </MainLayout>

@@ -3,14 +3,14 @@
 ========================= */
 
 .account-card {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  background-color: #ffffff;
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-card);
+  background-color: var(--gp-surface);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .account-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important; /* tambahkan !important agar menimpa shadow-sm */
+  box-shadow: var(--gp-shadow-card);
   transform: translateY(-2px);
 }
 
@@ -22,13 +22,13 @@
 }
 
 .role-badge.admin {
-  background-color: #e8f5ed;
-  color: #198754;
+  background-color: var(--gp-success-soft);
+  color: var(--gp-primary);
 }
 
 .role-badge.user {
-  background-color: #e9ecef;
-  color: #495057;
+  background-color: var(--gp-neutral-soft);
+  color: var(--gp-neutral);
 }
 
 .account-card-body {

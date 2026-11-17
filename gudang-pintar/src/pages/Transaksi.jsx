@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MainLayout from "../app-layouts/MainLayout";
 import Button from "../components/common/Button";
 import Pagination from "../components/common/Pagination";
 import Input from "../components/common/Input";
-import SelectControl from "../components/common/SelectControl";
 import CheckboxControl from "../components/common/CheckboxControl";
 import useNotification from "../hooks/useNotification";
 import useFetch from "../hooks/useFetch";
+import useFocusTrap from "../hooks/useFocusTrap";
 import "./Transaksi.css";
 import { recordTransactionStockHistory } from "../services/historyService";
 
@@ -23,8 +23,8 @@ export default function Transaksi() {
   const [type, setType] = useState("masuk");
   const [searchQuery, setSearchQuery] = useState("");
   const [listSearchQuery, setListSearchQuery] = useState("");
-  const [modalPageSize, setModalPageSize] = useState("5");
-  const [listPageSize, setListPageSize] = useState("5");
+  const [modalPageSize, setModalPageSize] = useState("10");
+  const [listPageSize, setListPageSize] = useState("10");
   const [modalPage, setModalPage] = useState(1);
   const [listPage, setListPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,6 +37,7 @@ export default function Transaksi() {
   const [, setStockHistory] = useState([]);
   // Data barang dari public/barang.json beserta pilihan sementara pada formulir.
   const [items, setItems] = useState([]);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     if (!fetchedItems.length) return;
@@ -54,6 +55,21 @@ export default function Transaksi() {
       notify({ type: "danger", title: "Gagal memuat barang", message: error });
     }
   }, [error, notify]);
+
+  const cancelTransaction = useCallback(() => {
+    // Buang perubahan form yang belum disimpan tanpa mengubah stok.
+    setItems((currentItems) =>
+      currentItems.map((item) => ({ ...item, selected: false, transactionQuantity: 0 })),
+    );
+    setSearchQuery("");
+    setIsModalOpen(false);
+  }, []);
+
+  useFocusTrap({
+    active: isModalOpen,
+    containerRef: modalRef,
+    onEscape: cancelTransaction,
+  });
 
   // Pencarian pada daftar barang di dalam modal transaksi.
   const filteredItems = items.filter((item) => {
@@ -113,15 +129,6 @@ export default function Transaksi() {
     setSearchQuery("");
     setModalPage(1);
     setIsModalOpen(true);
-  }
-
-  function cancelTransaction() {
-    // Buang perubahan form yang belum disimpan tanpa mengubah stok.
-    setItems((currentItems) =>
-      currentItems.map((item) => ({ ...item, selected: false, transactionQuantity: 0 })),
-    );
-    setSearchQuery("");
-    setIsModalOpen(false);
   }
 
   function showFormError(message) {
@@ -238,15 +245,6 @@ export default function Transaksi() {
               </div>
             )}
 
-            {error && (
-              <div className="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
-                <span>{error}</span>
-                <Button variant="secondary" size="sm" onClick={refetch}>
-                  Coba lagi
-                </Button>
-              </div>
-            )}
-
             <section className="card shadow-sm border-0 p-4">
               <h4 className="card-title mb-3">Pilih Jenis Transaksi</h4>
               <p className="text-secondary">Pilih transaksi untuk membuka formulir.</p>
@@ -292,7 +290,12 @@ export default function Transaksi() {
                     ) : error ? (
                       <tr>
                         <td colSpan="4" className="text-center text-secondary py-3">
-                          Data barang belum dapat ditampilkan.
+                          <div className="d-flex flex-column align-items-center gap-2">
+                            <span>Data barang belum dapat ditampilkan.</span>
+                            <Button variant="secondary" size="sm" onClick={refetch}>
+                              Coba lagi
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ) : visibleListItems.map((item) => (
@@ -315,35 +318,15 @@ export default function Transaksi() {
                   </tbody>
                 </table>
               </div>
-              <div className="transaction-pagination-row">
-                <div className="d-flex align-items-center gap-2">
-                  <span>Tampilkan</span>
-                  <SelectControl
-                    id="transaction-list-page-size"
-                    className="transaction-page-size-control"
-                    selectClassName="form-select-sm page-size-select"
-                    options={[
-                      { value: "5", label: "5" },
-                      { value: "10", label: "10" },
-                      { value: "20", label: "20" },
-                      { value: "all", label: "Semua" },
-                    ]}
-                    value={listPageSize}
-                    onChange={(value) => {
-                      setListPageSize(value);
-                      setListPage(1);
-                    }}
-                    aria-label="Jumlah barang yang ditampilkan"
-                  />
-                  <span>barang</span>
-                </div>
-                <Pagination
-                  currentPage={listPage}
-                  totalPages={listPageCount}
-                  onPageChange={setListPage}
-                  ariaLabel="Halaman daftar barang transaksi"
-                />
-              </div>
+              <Pagination
+                currentPage={listPage}
+                totalPages={listPageCount}
+                onPageChange={setListPage}
+                ariaLabel="Halaman daftar barang transaksi"
+                pageSize={listPageSize}
+                onPageSizeChange={setListPageSize}
+                itemLabel="barang"
+              />
             </section>
 
           </div>
@@ -353,6 +336,7 @@ export default function Transaksi() {
         <>
           <div className="modal-backdrop fade show" onClick={cancelTransaction} />
           <div
+            ref={modalRef}
             className="modal fade show d-block"
             role="dialog"
             aria-modal="true"
@@ -439,35 +423,16 @@ export default function Transaksi() {
                   </tbody>
                 </table>
               </div>
-              <div className="transaction-pagination-row">
-                <div className="d-flex align-items-center gap-2">
-                  <span>Tampilkan</span>
-                  <SelectControl
-                    id="transaction-modal-page-size"
-                    className="transaction-page-size-control"
-                    selectClassName="form-select-sm page-size-select"
-                    options={[
-                      { value: "5", label: "5" },
-                      { value: "10", label: "10" },
-                      { value: "20", label: "20" },
-                      { value: "all", label: "Semua" },
-                    ]}
-                    value={modalPageSize}
-                    onChange={(value) => {
-                      setModalPageSize(value);
-                      setModalPage(1);
-                    }}
-                    aria-label="Jumlah barang yang ditampilkan di formulir transaksi"
-                  />
-                  <span>barang</span>
-                </div>
-                <Pagination
-                  currentPage={modalPage}
-                  totalPages={modalPageCount}
-                  onPageChange={setModalPage}
-                  ariaLabel="Halaman pilihan barang transaksi"
-                />
-              </div>
+              <Pagination
+                currentPage={modalPage}
+                totalPages={modalPageCount}
+                onPageChange={setModalPage}
+                ariaLabel="Halaman pilihan barang transaksi"
+                pageSize={modalPageSize}
+                onPageSizeChange={setModalPageSize}
+                itemLabel="barang"
+                scrollToTop={false}
+              />
 
                   {/* Ringkasan ini berubah langsung saat pilihan atau kuantitas diedit. */}
                   {selectedItemsForSummary.length > 0 && (

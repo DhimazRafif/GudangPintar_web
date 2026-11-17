@@ -1,0 +1,47 @@
+.gp-pagination-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  width: 100%;
+  padding: 1rem 0 0.5rem;
+}
+
+.gp-pagination-bar--with-size {
+  justify-content: space-between;
+}
+
+.gp-pagination-size {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gp-text-muted);
+  font-size: 0.9rem;
+}
+
+.gp-pagination-size-field {
+  width: 5.5rem;
+}
+
+.gp-pagination-nav {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 575.98px) {
+  .gp-pagination-bar--with-size {
+    justify-content: center;
+  }
+
+  .gp-pagination-size {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .gp-pagination-nav {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}

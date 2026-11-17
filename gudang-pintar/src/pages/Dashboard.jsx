@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStock, setSelectedStock] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 18;
+  const [pageSize, setPageSize] = useState("10");
 
   const { data: items, isLoading, error, refetch } = useFetch("/barang.json");
 
@@ -122,11 +122,15 @@ export default function Dashboard() {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory, selectedStock]);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-  const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const itemsPerPage = pageSize === "all" ? filteredItems.length : Number(pageSize);
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+  const displayedItems = pageSize === "all"
+    ? filteredItems
+    : filteredItems.slice(indexOfFirstItem, indexOfFirstItem + itemsPerPage);
+  const totalPages = Math.max(
+    1,
+    pageSize === "all" ? 1 : Math.ceil(filteredItems.length / itemsPerPage),
+  );
 
   const isFilterActive =
     searchQuery !== "" || selectedCategory !== "all" || selectedStock !== "all";
@@ -230,6 +234,9 @@ export default function Dashboard() {
             totalPages={totalPages}
             onPageChange={setCurrentPage}
             ariaLabel="Navigasi Halaman Dashboard"
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+            itemLabel="barang"
           />
         </>
       )}
